@@ -69,7 +69,7 @@ const Home = () => {
     <_Interface>
         <Headerwrap>
         <Title1>📝 게시판</Title1>
-        <Detail>더보기 <Detailsvg/></Detail>
+        <Detail onClick={()=>navigate('/community')}>더보기 <Detailsvg/></Detail>
         </Headerwrap>
         <Msgwrap>
         <Nodatamsg>데이터없음</Nodatamsg>
@@ -78,7 +78,7 @@ const Home = () => {
     <_Interface>
         <Headerwrap>
         <Title1>📷 대여/반납</Title1>
-        <Detail>더보기 <Detailsvg/></Detail>
+        <Detail onClick={()=>navigate('/rental')}>더보기 <Detailsvg/></Detail>
         </Headerwrap>
         <Msgwrap>
         <Nodatamsg>데이터없음</Nodatamsg>

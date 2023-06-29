@@ -60,7 +60,7 @@ const UserLogin = () => {
                 });
 
                 axios.post("http://www.zena.co.kr/api/login", {
-                    email : inputId,
+                    accountID : inputId,
                     password : inputPw,
                     job : job
                 })
@@ -86,7 +86,10 @@ const UserLogin = () => {
                             alert(res.data.message)
                         }
                     })
-                    .catch(()=>{alert("아이디 비번이 틀렸습니다")})
+                    .catch((error)=>{
+                        console.log(error)
+                        alert("서버 연결불가")
+                    })
                 console.log({form})
                 }}>
 
@@ -108,21 +111,21 @@ const UserLogin = () => {
             <_Label>아이디</_Label>
             <br />
             <_Input
-            value={inputId}
-            onChange={handleInputId}
-            type="text"
-            placeholder="이메일 아이디"
+                value={inputId}
+                onChange={handleInputId}
+                type="text"
+                placeholder="아이디를 적어주세요."
             />
         </_InputWrap>
         <_InputWrap>
             <_Label>비밀번호</_Label>
             <br />
             <_Input
-            value={inputPw}
-            onChange={handleInputPw}
-            type={passwordType.type}
-            placeholder="비밀번호 입력 (최소 8자)"
-            minLength={8}
+                value={inputPw}
+                onChange={handleInputPw}
+                type={passwordType.type}
+                placeholder="비밀번호를 입력해주세요."
+                minLength={8}
             />
             <_Logowrap onClick={handlePasswordType}>
                 {passwordType.visible ? <_Logo src='eye1.svg'></_Logo> : <_Logo src='eye2.svg'></_Logo>}

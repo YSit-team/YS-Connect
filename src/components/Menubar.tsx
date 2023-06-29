@@ -38,7 +38,13 @@ const ResponsiveNavbar = () => {
                         <_Link>대여 신청하기</_Link>
                     </MenuItem>
                     <MenuItem onClick={() => navigate('/status')}>
-                        <_Link>나의 신청현황</_Link>
+                        <_Link>기자재 신청현황</_Link>
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate('/community')}>
+                        <_Link>게시판</_Link>
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate('/Room_S')}>
+                        <_Link>방음부스</_Link>
                     </MenuItem>
                     {/* <MenuItem onClick={() => navigate('/add-camera')}>
                         <_Link>기자재 추가하기</_Link>
@@ -58,7 +64,10 @@ const ResponsiveNavbar = () => {
                 <Menu>
                     <MenuItemWrapper>
                     <MenuItem onClick={() => navigate('/rentallist')}>
-                        <_Link>신청내역</_Link>
+                        <_Link>기자재 신청내역</_Link>
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate('/Room_T')}>
+                        <_Link>방음부스</_Link>
                     </MenuItem>
                     {/* <MenuItem onClick={() => navigate('/add-camera')}>
                         <_Link>기자재 추가하기</_Link>

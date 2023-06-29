@@ -14,6 +14,8 @@ const Signup = () => {
   const [tel, setTel] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(true);
   const [inputValue, setInputValue] = useState("");
+  const [email, setemail] = useState("");
+  const [error, setError] = useState('');
   let navigate = useNavigate();
   const [color1, setJobColor1] = useState("#1E00D3");
   const [color2, setJobColor2] = useState("#B7B7B7");
@@ -30,6 +32,19 @@ const Signup = () => {
     setIsInputVisible(false);
   };
 
+  const handleBlur = () => {
+    if (!email.includes('@')) {
+      setError('Invalid email format');
+    } else {
+      setError('');
+      // Perform additional logic or submit the form
+    }
+  };
+
+  const handleChange = (event:any) => {
+    setemail(event.target.value);
+    setError('');
+  };
   // const signUp = () => {
   //   axios.post("http://www.zena.co.kr/api/register", {
   //       // job: job, //학생, 교사
@@ -90,7 +105,8 @@ const Signup = () => {
 
         axios.post("http://www.zena.co.kr/api/register", {
             // job: job, //학생, 교사
-            email: id, //이메일아이디
+            accountID: id,
+            email: email, //이메일아이디
             password: pw, //비밀번호
             phoneNumber: tel, //전화번호
             studentID: number, //학번
@@ -115,7 +131,8 @@ const Signup = () => {
         .catch(()=>{alert("로그인 요청 실패")})
         console.log({
           // job: job, //학생, 교사
-          email: id, //이메일아이디
+          accountID: id,
+          email: email, //이메일아이디
           password: pw, //비밀번호
           phoneNumber: tel, //전화번호
           studentID: number, //학번
@@ -127,7 +144,7 @@ const Signup = () => {
         <_FormWrap isInputVisible={isInputVisible}>
         <_Subtitle>환영합니다!</_Subtitle>
           <_TeamName>
-            I Can Do <_TeamNameColor>IT콘텐츠과</_TeamNameColor>
+            <_TeamNameColor>HIYS!</_TeamNameColor>
           </_TeamName>
 
       {/* -------------------학생,교사 구분 버튼-------------------------- */}
@@ -158,19 +175,28 @@ const Signup = () => {
           </_BottonWrap> */}
 
       {/* --------------------------------------------------------- */}
-          <_InputWrap>
+      <_InputWrap>
             <_Label>아이디</_Label>
-            <br />
             <_Input
               value={id}
               onChange={(event) => {setId(event.target.value);}}
               type="text"
-              placeholder="이메일 아이디"
+              placeholder="아이디를 입력해주세요."
             />
           </_InputWrap>
           <_InputWrap>
+            <_Label>이메일</_Label>
+            <_Input
+              value={email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              type="text"
+              placeholder="이메일을 입력해주세요."
+            />
+            {error && id && <span style={{ color: 'red' }}>{error}</span>}
+          </_InputWrap>
+          <_InputWrap>
             <_Label>비밀번호</_Label>
-            <br />
             <_Input
               value={pw}
               onChange={(event) => {setPw(event.target.value);}}
@@ -185,7 +211,6 @@ const Signup = () => {
           </_Logowrap>
           <_InputWrap>
             <_Label>전화번호</_Label>
-            <br />
             <_Input
               value={tel}
               onChange={(event) => {setTel(event.target.value);
@@ -204,7 +229,6 @@ const Signup = () => {
           {isInputVisible && (
           <_InputWrap>
             <_Label>학번</_Label>
-            <br />
             <_Input
               value={number}
               onChange={(event) => {setNumber(event.target.value);}}
@@ -218,7 +242,6 @@ const Signup = () => {
           <Namewrap>
           <_InputWrap>
             <_Label>성</_Label>
-            <br />
             <Nameinput
               value={firstname}
               onChange={(event) => {setfirstName(event.target.value);}}
@@ -230,7 +253,6 @@ const Signup = () => {
           </_InputWrap>
           <_InputWrap>
             <_Label>이름</_Label>
-            <br/>
             <Nameinput
               value={lastname}
               onChange={(event) => {setlastName(event.target.value);}}
@@ -242,7 +264,7 @@ const Signup = () => {
           </_InputWrap>
           </Namewrap>
           <_SignUpBtnWrap>
-            <_SignUpBtn type="submit">
+            <_SignUpBtn type="submit" onClick={handleBlur}>
               가입하기
             </_SignUpBtn>
           </_SignUpBtnWrap>
@@ -276,7 +298,8 @@ const _FormWrap = styled.div<ContainerProps>`
   flex-direction: column;
 
   background-color: #ffffff;
-  height: ${({ isInputVisible }) => (isInputVisible ? '710px' : '620px')};
+  /* height: ${({ isInputVisible }) => (isInputVisible ? '710px' : '620px')}; */
+  height: 750px;
   /* height: (job === "student" ? '690px' : '610px');
   
   if (job === student) {
@@ -374,6 +397,8 @@ const _Input = styled.input`
 const _InputWrap = styled.div`
   margin: 0 auto;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const _SignUpBtn = styled.button`

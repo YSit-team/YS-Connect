@@ -13,6 +13,12 @@ import Test from './pages/Test'
 import AddCamera from './pages/Equipment/AddCamera'
 import Notlogin from './pages/Notlogin'
 import RentalStatus from './pages/Equipment/RentalStatus'
+import Community from './pages/Community/Community'
+import CommunityDetail from './pages/Community/CommunityDetail'
+import CommunityWrite from './pages/Community/CommunityWrite'
+import RentalRoom_S from './pages/SoundProofBooth/RentalRoom_S'
+import RentalRoom_T from './pages/SoundProofBooth/RentalRoom_T'
+import RoomDetail from './pages/SoundProofBooth/RoomDetail'
 
 
 function App() {
@@ -32,6 +38,12 @@ function App() {
       <Route path="/add-camera" element={<AddCamera />} />
       <Route path="/" element={<Notlogin />} />
       <Route path="/status" element={<RentalStatus />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/communitywrite" element={<CommunityWrite />} />
+      <Route path="/CommunityDetail/:id" element={<CommunityDetail/>} />
+      <Route path="/Room_S" element={<RentalRoom_S />} />
+      <Route path="/Room_T" element={<RentalRoom_T />} />
+      <Route path="/roomdetail/:id" element={<RoomDetail/>} />
     </Routes>
     </Router>
   );
