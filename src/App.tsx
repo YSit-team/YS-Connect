@@ -16,9 +16,9 @@ import RentalStatus from './pages/Equipment/RentalStatus'
 import Community from './pages/Community/Community'
 import CommunityDetail from './pages/Community/CommunityDetail'
 import CommunityWrite from './pages/Community/CommunityWrite'
-import RentalRoom_S from './pages/SoundProofBooth/RentalRoom_S'
-import RentalRoom_T from './pages/SoundProofBooth/RentalRoom_T'
-import RoomDetail from './pages/SoundProofBooth/RoomDetail'
+import RentalRoom_S from './pages/Booth/RentalRoom_S'
+import RentalRoom_T from './pages/Booth/RentalRoom_T'
+import RoomDetail from './pages/Booth/RoomDetail'
 
 
 function App() {

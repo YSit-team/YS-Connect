@@ -4,6 +4,7 @@ import Menubartest from '../../components/Menubar';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/API_Server';
+import Menubar from '../../components/Menubar';
 
 const CommunityWrite = () => {
     // const [id, setId] = useState("");
@@ -56,6 +57,7 @@ const CommunityWrite = () => {
 
     return (
         <>
+        <Menubar/>
         <div>
             <form onSubmit={(event: any) => {
                 event.preventDefault();

@@ -54,6 +54,7 @@ const CommunityDetail = () => {
     
     return (
     <>
+    <Menubar/>
     <h2>{postsData.title}</h2>
     <h4>{postsData.content}</h4>
     <div>{postsData.author}</div>

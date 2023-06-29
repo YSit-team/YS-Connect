@@ -121,25 +121,24 @@ const RentalRoom_S = () => {
     },[])
     return (
       <_Wrap>
+        <Menubar/>
       <_Writewrap>
-        <_Header>신청하기</_Header>
+        <_Header>방음부스 신청</_Header>
         <_Listwrap>
-          <_Subtext>방음부스 목록<_SubmitBtn type="submit" bg="#1E00D3" color="#ffffff" onClick={test2}>제출하기</_SubmitBtn>
-              <select name="language">
+        </_Listwrap>
+
+
+{/*-----------------------------------신청서 작성----------------------------------*/}
+        <_Subtext>신청서 작성 <_SubmitBtn type="submit" bg="#1E00D3" color="#ffffff" onClick={test2}>제출하기</_SubmitBtn></_Subtext>
+        <_Inputtitle><Label>이름</Label><_Input value={firstName+lastName} disabled/></_Inputtitle>
+        <_Inputtitle><Label>학번</Label><_Input value={studentID} disabled/></_Inputtitle>
+        <_Inputtitle><Label>방음부스</Label><select name="language">
                 <option>방음부스 선택하기</option>
                 {
                   roomdata.map((item:any)=>(
                     <option key={item.id}  value={item.id} disabled ={item.disabled}>{item.id} 방음부스</option>
                   ))}
-              </select>
-          </_Subtext>
-        </_Listwrap>
-
-
-{/*-----------------------------------신청서 작성----------------------------------*/}
-        <_Subtext>신청서 작성</_Subtext>
-        <_Inputtitle><Label>이름</Label><_Input value={firstName+lastName} disabled/></_Inputtitle>
-        <_Inputtitle><Label>학번</Label><_Input value={studentID} disabled/></_Inputtitle>
+              </select></_Inputtitle>
         <_Inputtitle><Label>대여 시간</Label><_Input type="time"  min="08:40" max="22:00" 
         onChange={(event) =>{
           setRoomUsingStartTime(event.target.value)

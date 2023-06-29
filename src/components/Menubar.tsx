@@ -4,17 +4,20 @@ import {useNavigate} from 'react-router-dom';
 import axiosInstance from '../api/API_Server';
 
 
-const ResponsiveNavbar = () => {
+const Menubar = () => {
     let navigate = useNavigate();
     const [ID, setID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [name, setname] = useState("");
+    const [email, setemail] = useState("");
 
     const Logout = () => {
         sessionStorage.removeItem('userId');
         navigate('/')
         window.location.reload();
     }
+    
     useEffect(() => {
     if (ID) {
         axiosInstance
@@ -22,6 +25,7 @@ const ResponsiveNavbar = () => {
         .then((response) => {
             console.log(response.data);
             setname(response.data.firstName+response.data.lastName)
+            setemail(response.data.email)
         })
         .catch((error) => console.log(error));
     }
@@ -51,9 +55,40 @@ const ResponsiveNavbar = () => {
                     </MenuItem> */}
                     </MenuItemWrapper>
                     <Namewrap>
-                        <Name>{name+"님"}</Name>
-                        <Logoutbtn onClick={Logout}>로그아웃</Logoutbtn>
+                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='user.svg' style={{ width: '14.4px', height: '14.4px' }}></img></Name>
                     </Namewrap>
+                    {isModalVisible && (
+                        <ModalContent>
+                        <ProfileHeader>
+                            <_modalname>{name}</_modalname>
+                            <Email>{email}</Email>
+                        </ProfileHeader>
+                        <ButtonWrapper>
+
+                            <IconBtn_wrap>
+                            <IconButton>
+                                <Icon src='user.svg'></Icon>
+                            </IconButton>
+                            <ButtonText>프로필 수정</ButtonText>
+                            </IconBtn_wrap>
+
+                            <IconBtn_wrap>
+                            <IconButton>
+                                <Icon src='moon.svg'></Icon>
+                            </IconButton>
+                            <ButtonText>다크모드</ButtonText>
+                            </IconBtn_wrap>
+
+                            <IconBtn_wrap>
+                            <IconButton onClick={Logout}>
+                                <Icon src='signout.svg'></Icon>
+                            </IconButton>
+                            <ButtonText>로그아웃</ButtonText>
+                            </IconBtn_wrap>
+
+                        </ButtonWrapper>
+                        </ModalContent>
+            )}
                 </Menu>
                 </Navbar>
             );
@@ -74,7 +109,7 @@ const ResponsiveNavbar = () => {
                     </MenuItem> */}
                     </MenuItemWrapper>
                     <Namewrap>
-                        <Name>{name+"님"}</Name>
+                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}</Name>
                         <Logoutbtn onClick={Logout}>로그아웃</Logoutbtn>
                     </Namewrap>
                     
@@ -98,7 +133,7 @@ const ResponsiveNavbar = () => {
 };
 
 
-export default ResponsiveNavbar;
+export default Menubar;
 
     const Navbar = styled.nav`
     position: fixed;
@@ -190,11 +225,114 @@ const Namewrap = styled.div`
 
 `
 
-const Name = styled.span`
+const Name = styled.button`
+    border: none;
+    background: none;
     font-size: 0.9rem;
     font-weight: bold;
+    cursor: pointer;
     color: #333;
     @media (max-width: 600px) {
         font-size: 0.7rem;
     }
+    :hover {
+        color: #1E00D3;
+    }
 `
+
+// const ModalWrapper = styled.div`
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     margin-top: 70px;
+//     /* margin-left: 50px; */
+//     border-radius: 3px;
+//     margin-left: 80%;
+//     z-index: 2;
+//     background-color: white;
+//     width: 150px;
+//     height: 117px;
+//     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+// `
+
+// const ModalContent = styled.div`
+//     padding: 8px;
+//     :hover {
+//         color: #ffffff;
+//         background-color: #afafaf;
+//     }
+// `;
+
+
+const ModalContent = styled.div`
+background: linear-gradient(to right, #6a11cb, #2575fc);
+position: fixed;
+top: 0;
+right: 0;
+margin-top: 70px;
+/* margin-left: 50px; */
+margin-right: 50px;
+border-radius: 10px;
+z-index: 2;
+background-color: white;
+width: 300px;
+height: 145px;
+padding: 20px;
+`;
+
+const ProfileHeader = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-bottom: 20px;
+`;
+
+const _modalname = styled.div`
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+`
+
+const Email = styled.p`
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #fff;
+    `;
+
+const ButtonWrapper = styled.div`
+display: flex;
+justify-content: center;
+`;
+
+const IconBtn_wrap = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const IconButton = styled.button`
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: none;
+    border-radius: 50px;
+    background-color: #fff;
+    cursor: pointer;
+`;
+
+const Icon = styled.img`
+    width: 20px;
+    height: 20px;
+    padding: 8px;
+`
+
+const ButtonText = styled.span`
+font-size: 14px;
+color: #fff;
+text-align: center;
+font-weight: bold;
+`;

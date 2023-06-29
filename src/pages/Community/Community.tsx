@@ -28,6 +28,7 @@ const Community = () => {
 
     return (
         <>
+        <Menubar/>
         <_GlobalWrap>
         {/* <Menubar/> */}
         <_BoardListWrap>
