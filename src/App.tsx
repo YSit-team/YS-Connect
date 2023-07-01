@@ -19,6 +19,8 @@ import CommunityWrite from './pages/Community/CommunityWrite'
 import RentalRoom_S from './pages/Booth/RentalRoom_S'
 import RentalRoom_T from './pages/Booth/RentalRoom_T'
 import RoomDetail from './pages/Booth/RoomDetail'
+import Profile from './pages/Account/Profile'
+import EditProfile from './pages/Account/EditProfile';
 
 
 function App() {
@@ -44,6 +46,8 @@ function App() {
       <Route path="/Room_S" element={<RentalRoom_S />} />
       <Route path="/Room_T" element={<RentalRoom_T />} />
       <Route path="/roomdetail/:id" element={<RoomDetail/>} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/edit" element={<EditProfile />} />
     </Routes>
     </Router>
   );

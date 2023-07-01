@@ -55,7 +55,7 @@ const Menubar = () => {
                     </MenuItem> */}
                     </MenuItemWrapper>
                     <Namewrap>
-                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='user.svg' style={{ width: '14.4px', height: '14.4px' }}></img></Name>
+                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='Down.svg' style={{ width: '20px', height: '20px' }}></img></Name>
                     </Namewrap>
                     {isModalVisible && (
                         <ModalContent>
@@ -66,7 +66,7 @@ const Menubar = () => {
                         <ButtonWrapper>
 
                             <IconBtn_wrap>
-                            <IconButton>
+                            <IconButton onClick={() => navigate('/edit')}>
                                 <Icon src='user.svg'></Icon>
                             </IconButton>
                             <ButtonText>프로필 수정</ButtonText>
@@ -222,10 +222,11 @@ const Namewrap = styled.div`
     align-items: center;
     justify-content: space-around;
     margin-right: 15px;
-
 `
 
 const Name = styled.button`
+    display: flex;
+    align-items: center;
     border: none;
     background: none;
     font-size: 0.9rem;

@@ -29,51 +29,50 @@ const Community = () => {
     return (
         <>
         <Menubar/>
-        <_GlobalWrap>
-        {/* <Menubar/> */}
-        <_BoardListWrap>
-        <_BoardTitle>커뮤니티</_BoardTitle>
-        <_BoardList>
-        <_ListHead>
-        <_Num>번호</_Num>
-        <_Title>제목</_Title>
-        <_Name>작성자</_Name>
-        <_Time>작성일</_Time>
-        <_Views>조회</_Views>
-        <_Likes>좋아요</_Likes>
-        </_ListHead>
-        <_ListBody>
-        <_Item>
-            <_Num>1</_Num>
-            <_Title>오늘의 일기</_Title>
-            <_Name>박상규</_Name>
-            <_Time>2024.02.02</_Time>
-            <_Views>0</_Views>
-            <_Likes>0</_Likes>
-        </_Item>
-        {
-            postsData.map((data:any) => {
-                console.log(data)
-                return(
-                    <_Item className='list-item' key={data.id}>
-                        <_Num>{data.id}</_Num>
-                        <_Title>
-                        <Link to={`/communitydetail/${data.id}`}>
-                            <div>{data.title}</div>
-                        </Link>
-                        </_Title>
-                        <_Name>{data.author}</_Name>
-                        <_Time>{data.date}</_Time>
-                        {/* <_Time>2024.02.02</_Time> */}
-                        <_Views>{data.views}</_Views>
-                        <_Likes>{data.likes}</_Likes>
-                    </_Item>
-            )
-        })}
-        </_ListBody>
-        {/* <_WriteBtn onClick={()=>navigate('/communitywrite')}>글 작성</_WriteBtn> */}
-        </_BoardList>
-        </_BoardListWrap>
+            <_GlobalWrap>
+            <_BoardListWrap>
+                <_BoardTitle>커뮤니티</_BoardTitle>
+                <_BoardList>
+                    <_ListHead>
+                        <_Num>번호</_Num>
+                        <_Title>제목</_Title>
+                        <_Name>작성자</_Name>
+                        <_Time>작성일</_Time>
+                        <_Views>조회</_Views>
+                        <_Likes>좋아요</_Likes>
+                    </_ListHead>
+                    <_ListBody>
+                        <_Item>
+                            <_Num>1</_Num>
+                            <_Title>오늘의 일기</_Title>
+                            <_Name>박상규</_Name>
+                            <_Time>2024.02.02</_Time>
+                            <_Views>0</_Views>
+                            <_Likes>0</_Likes>
+                        </_Item>
+                        {
+                            postsData.map((data:any) => {
+                                console.log(data)
+                                return(
+                                    <_Item className='list-item' key={data.id}>
+                                        <_Num>{data.id}</_Num>
+                                        <_Title>
+                                        <Link to={`/communitydetail/${data.id}`}>
+                                            <div>{data.title}</div>
+                                        </Link>
+                                        </_Title>
+                                        <_Name>{data.author}</_Name>
+                                        <_Time>{data.date}</_Time>
+                                        {/* <_Time>2024.02.02</_Time> */}
+                                        <_Views>{data.views}</_Views>
+                                        <_Likes>{data.likes}</_Likes>
+                                    </_Item>
+                            )
+                        })}
+                    </_ListBody>
+                    {/* <_WriteBtn onClick={()=>navigate('/communitywrite')}>글 작성</_WriteBtn> */}
+                </_BoardList>
+            </_BoardListWrap>
         </_GlobalWrap>
         </>
         );
@@ -137,7 +136,7 @@ const _Title = styled.div`
     > Link {
         text-decoration: none;
     }
-    text-align: left;
+    text-align: center;
     width: 40%;
     
 `
