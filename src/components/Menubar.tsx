@@ -6,6 +6,7 @@ import axiosInstance from '../api/API_Server';
 
 const Menubar = () => {
     let navigate = useNavigate();
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [ID, setID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,6 +35,7 @@ const Menubar = () => {
     if (ID) {
         if(job == "student") {
             return (
+                <>
                 <Navbar>
                 <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/home')} />
                 <Menu>
@@ -55,7 +57,7 @@ const Menubar = () => {
                     </MenuItem> */}
                     </MenuItemWrapper>
                     <Namewrap>
-                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='Down.svg' style={{ width: '20px', height: '20px' }}></img></Name>
+                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='/Down.svg' style={{ width: '20px', height: '20px' }}></img></Name>
                     </Namewrap>
                     {isModalVisible && (
                         <ModalContent>
@@ -67,21 +69,21 @@ const Menubar = () => {
 
                             <IconBtn_wrap>
                             <IconButton onClick={() => navigate('/edit')}>
-                                <Icon src='user.svg'></Icon>
+                                <Icon src='/user.svg'></Icon>
                             </IconButton>
                             <ButtonText>프로필 수정</ButtonText>
                             </IconBtn_wrap>
 
                             <IconBtn_wrap>
                             <IconButton>
-                                <Icon src='moon.svg'></Icon>
+                                <Icon src='/moon.svg'></Icon>
                             </IconButton>
                             <ButtonText>다크모드</ButtonText>
                             </IconBtn_wrap>
 
                             <IconBtn_wrap>
                             <IconButton onClick={Logout}>
-                                <Icon src='signout.svg'></Icon>
+                                <Icon src='/signout.svg'></Icon>
                             </IconButton>
                             <ButtonText>로그아웃</ButtonText>
                             </IconBtn_wrap>
@@ -91,9 +93,11 @@ const Menubar = () => {
             )}
                 </Menu>
                 </Navbar>
+                </>
             );
         }else {
             return (
+                <>
                 <Navbar>
                 <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/rentallist')} />
                 <Menu>
@@ -115,10 +119,13 @@ const Menubar = () => {
                     
                 </Menu>
                 </Navbar>
+                </>
             );
         };
     } else {
     return (
+        <>
+        {isMenuVisible && (
         <Navbar>
         <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/')} />
         <Menu>
@@ -128,6 +135,8 @@ const Menubar = () => {
             <LoginButton onClick={()=>navigate('/login')}>로그인</LoginButton>
         </Menu>
         </Navbar>
+        )}
+        </>
     );
     }
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Menubar from '../../components/Menubar';
 import axiosInstance from '../../api/API_Server';
 import { useNavigate, Link} from "react-router-dom";
 import axios from 'axios';
@@ -73,7 +72,6 @@ const EditProfile = () => {
 
     return (
         <div>
-            <Menubar/>
             <Wrap>
             <Title>내 정보 수정</Title>
             <ProfileWrap>
@@ -85,7 +83,7 @@ const EditProfile = () => {
             </ProfileWrap>
                 <InputWrap>
                     <InputTitle>현재 비밀번호</InputTitle>
-                    <_Input value={oldpw} onChange={(e)=>{setoldpw(e.target.value);}}></_Input>
+                    <_Input type = "password" value={oldpw} onChange={(e)=>{setoldpw(e.target.value);}}></_Input>
                 </InputWrap>
                 <hr/>
                 <InputWrap>
@@ -115,12 +113,12 @@ const EditProfile = () => {
                 <hr/>
                 <InputWrap>
                     <InputTitle>새 비밀번호</InputTitle>
-                    <_Input value={newpw} onChange={(e)=>{setnewpw(e.target.value);}}></_Input>
+                    <_Input type = "password" value={newpw} onChange={(e)=>{setnewpw(e.target.value);}}></_Input>
                 </InputWrap>
                 <hr/>
                 <InputWrap>
                     <InputTitle>새 비밀번호 확인</InputTitle>
-                    <_Input value={checkpw} onChange={(e)=>{setcheckpw(e.target.value);}}></_Input>
+                    <_Input type = "password" value={checkpw} onChange={(e)=>{setcheckpw(e.target.value);}}></_Input>
                 </InputWrap>
                 <hr/>
                 <CompleteBtn onClick={Postform}>완료</CompleteBtn>

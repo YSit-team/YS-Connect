@@ -3,53 +3,55 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Menubar from '../../components/Menubar'
 import { useParams } from 'react-router-dom';
+import axiosInstance from '../../api/API_Server';
+
+interface PostData {
+    title: string;
+    content: string;
+    author: string;
+    date: string;
+    likes: number;
+    views: number;
+}
 
 const CommunityDetail = () => {
-    const { id } = useParams(); // get the product ID from the URL
-    // const [product, setProduct]:any = useState([]);
-    // const [Accept, setAccept] = useState(true)
+    const { id } = useParams();
 
-    const [postsData, setPostData]:any = useState([])
+    const [postsData, setPostsData] = useState<PostData | null>(null);
 
-    const handle = async() => {
-        try{
-            const response = await axios.post("http://www.zena.co.kr/api/Community/postInquiry",{id:id});
-            setPostData(response.data.results[0]);
-            //console.log(response.data.results[0])
-        }catch (error){
-            console.log(error)
-        }
-        //     .then((res)=>(
-        //         //console.log(res.data)
-        //         setPostData(res.data.results)
-        //         console.log(res)
-        //         )).catch((error)=>(
-        //             console.log(error)
-        //             ))
-        // }
+    console.log(id)
+    const params = {
+        postID: "57"
     }
+
+    const handle = async (): Promise<void> => {
+        try {
+        const res = await axiosInstance.get('/Community/postInquiry', { params });
+        if (res.status === 200) {
+            if (res.data) { // 데이터가 유효한 경우에만 setPostsData 호출
+                setPostsData(res.data.results[0]);
+                console.log(res.data.results[0]);
+            }
+        } else if (res.status === 400) {
+            alert('코드 400');
+        } else if (res.status === 500) {
+            alert('코드 500');
+        } else {
+            alert('예외발생');
+        }
+        } catch (error) {
+        console.log(error);
+        }
+    };
 
     useEffect(() => {
         handle()
     }, [])
 
-    console.log(postsData)
-    // useEffect(()=>{
-    //     axios.get("/rental_list.json").then((response) => {
-    //         const foundProduct = response.data.find(
-    //         (product: any) => product.id == parseInt(id || '', 10)//////데이터가 안불러와짐
-    //         );
-    //         if (foundProduct) {
-    //         setProduct(foundProduct);
-    //         }
-    //         console.log(product)
-    //     })
-    //     .catch((error) => console.log(error));
-    // },[id]);
-
-    // if (!product) {
-    //     return <div>Product not found.</div>;
-    // }
+    if (postsData === null) {
+        return <div>Loading...</div>;
+    }
+    // console.log(postsData)
 
     
     return (
@@ -58,7 +60,7 @@ const CommunityDetail = () => {
     <h2>{postsData.title}</h2>
     <h4>{postsData.content}</h4>
     <div>{postsData.author}</div>
-    <div>개시일 : {postsData.date}</div>
+    <div>게시일 : {postsData.date}</div>
     <div>좋아요 : {postsData.likes}</div>
     <div>조회수 : {postsData.views}</div>
     </>

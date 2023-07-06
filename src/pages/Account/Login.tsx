@@ -14,7 +14,7 @@ const UserLogin = () => {
         type:'password',
         visible:false
     })
-    
+
     const handlePasswordType = (e:any) => {
         setPasswordType(()=>{
             if(!passwordType.visible) {

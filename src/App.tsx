@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { darkTheme, lightTheme } from './api/theme';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AdminHome from './pages/Teacher/AdminHome'
 import UserHome from './pages/Student/UserHome'
@@ -22,8 +24,9 @@ import RoomDetail from './pages/Booth/RoomDetail'
 import Profile from './pages/Account/Profile'
 import EditProfile from './pages/Account/EditProfile';
 
-
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
   return (
     <Router>
     <Routes>

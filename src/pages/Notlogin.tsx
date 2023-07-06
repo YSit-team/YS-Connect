@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Menubar from '../components/Menubar'
 
-const MenuBar3 = () => {
+const Notlogin = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const bell: string = require("../assets/bell.svg").default;
@@ -17,7 +17,7 @@ const MenuBar3 = () => {
     );
 }
 
-export default MenuBar3;
+export default Notlogin;
 
 const Navbar = styled.nav`
     display: flex;

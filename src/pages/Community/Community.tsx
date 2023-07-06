@@ -1,25 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Menubartest from '../../components/Menubar';
 import axios from 'axios';
 import Menubar from '../../components/Menubar';
 import { Link } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
-import { Script } from 'vm';
+import axiosInstance from '../../api/API_Server';
 
 const Community = () => {
     let navigate = useNavigate();
-    const [postsData, setPostData] = useState([])
+    const [PostData, setPostData] = useState([])
 
+    const params = {
+        page: 1,
+        limit: 5,
+    }
+    
     const handle = async() => {
-        axios.post("http://www.zena.co.kr/api/Community/postInquiry",)
-            .then((res)=>(
-                //console.log(res.data)
-                setPostData(res.data.results),
-                console.log(res.data.results)
-            )).catch((error)=>(
+        await axiosInstance.get('/Community/postInquiry', { params })
+            .then(async (res) => {
+                if (res.status === 200) {
+                    console.log(res.data.data)
+                    setPostData(res.data.data)
+                } else if (res.status === 400) {
+                    alert("코드 400")
+                } else if (res.status === 500) {
+                    alert("코드 500")
+                }
+            }).catch((error) => {
                 console.log(error)
-            ))
+            })
     }
 
     useEffect(() => {
@@ -34,7 +43,6 @@ const Community = () => {
                 <_BoardTitle>커뮤니티</_BoardTitle>
                 <_BoardList>
                     <_ListHead>
-                        <_Num>번호</_Num>
                         <_Title>제목</_Title>
                         <_Name>작성자</_Name>
                         <_Time>작성일</_Time>
@@ -42,33 +50,30 @@ const Community = () => {
                         <_Likes>좋아요</_Likes>
                     </_ListHead>
                     <_ListBody>
-                        <_Item>
+                        {/* <_Item>
                             <_Num>1</_Num>
                             <_Title>오늘의 일기</_Title>
                             <_Name>박상규</_Name>
                             <_Time>2024.02.02</_Time>
                             <_Views>0</_Views>
                             <_Likes>0</_Likes>
-                        </_Item>
-                        {
-                            postsData.map((data:any) => {
-                                console.log(data)
-                                return(
-                                    <_Item className='list-item' key={data.id}>
-                                        <_Num>{data.id}</_Num>
-                                        <_Title>
-                                        <Link to={`/communitydetail/${data.id}`}>
-                                            <div>{data.title}</div>
-                                        </Link>
-                                        </_Title>
-                                        <_Name>{data.author}</_Name>
-                                        <_Time>{data.date}</_Time>
-                                        {/* <_Time>2024.02.02</_Time> */}
-                                        <_Views>{data.views}</_Views>
-                                        <_Likes>{data.likes}</_Likes>
-                                    </_Item>
-                            )
-                        })}
+                        </_Item> */}
+                        <>
+                        {PostData.map((item: any, i: any) => (
+                            <_Item className='list-item' key={item.id}>
+                                <_Title>
+                                    <Link to={`/communitydetail/${item.id}`} style={{ textDecoration: 'none', color: '#000000'}}>
+                                        <div>{item.title}</div>
+                                    </Link>
+                                </_Title>
+                                <_Name>{item.author}</_Name>
+                                <_Time>{item.date.substring(0, 11).replace(/-/g, '.').replace(/T/g, ' ')}</_Time>
+                                {/* <_Time>2024.02.02</_Time> */}
+                                <_Views>{item.views}</_Views>
+                                <_Likes>{item.likes}</_Likes>
+                            </_Item>
+                        ))}
+                        </>
                     </_ListBody>
                     {/* <_WriteBtn onClick={()=>navigate('/communitywrite')}>글 작성</_WriteBtn> */}
                 </_BoardList>
@@ -133,12 +138,8 @@ const _Title = styled.div`
     :hover {
         text-decoration: underline;
     }
-    > Link {
-        text-decoration: none;
-    }
     text-align: center;
-    width: 40%;
-    
+    width: 50%;
 `
 const _Name = styled.div`
     text-align: center;
