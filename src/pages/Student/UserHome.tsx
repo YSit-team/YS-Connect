@@ -16,6 +16,10 @@ return (
 const Home = () => {
     let navigate = useNavigate();
     const [meal, setmeal] = useState("");
+    const [mealdate, setmealdate] = useState("");
+    const [breakfast, setbreakfast] = useState("데이터가 없습니다.");
+    const [lunch, setlunch] = useState("데이터가 없습니다.");
+    const [dinner, setdinner] = useState("데이터가 없습니다.");
     const [phonenum, setphonenum] = useState("");
     const [Name, setName] = useState("");
     const [email, setemail] = useState("");
@@ -38,7 +42,25 @@ const Home = () => {
         }
         }, [ID, job]);
 
-    Channeltalk.loadScript();
+        const handleDate = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+            const selectedDate = e.target.value;
+            setmealdate(selectedDate);
+        }
+
+        useEffect(() => {
+            const fetchData = async () => {
+            try {
+                const res = await axiosInstance.post("/meal", { DAY: mealdate.substring(2, 10).replace(/-/g, '') });
+                setbreakfast(res.data.breakfast);
+                setlunch(res.data.lunch);
+                setdinner(res.data.dinner);
+            } catch (error) {
+                alert("Request Failed");
+            }
+            };
+        
+            fetchData();
+        }, [mealdate]);
 
     Channeltalk.boot({
         "pluginKey": "aac0f50c-39b0-4629-939e-a5bc11441405", // fill your plugin key
@@ -54,6 +76,9 @@ const Home = () => {
         axiosInstance.post("/meal")
             .then(res => {
                 setmeal(res.data.lunch);
+                setbreakfast(res.data.breakfast);
+                setlunch(res.data.lunch);
+                setdinner(res.data.dinner);
                 console.log(meal);
             })
             .catch(() => {
@@ -89,10 +114,21 @@ const Home = () => {
     <_Interface>
         <Headerwrap>
         <Title1>🍚 급식표</Title1>
-        <Detail>더보기 <Detailsvg/></Detail>
         </Headerwrap>
         <Msgwrap>
-            {meal !== undefined ? <pre>{meal}</pre> : "데이터를 불러올수없음"}
+            {meal !== undefined ? 
+            <>
+            <Mealwrap>
+                <MealDate value={mealdate} type='date' onChange={handleDate}></MealDate>
+                <Mealtext>{meal}</Mealtext>
+            <MealbtnWrap>
+            <Mealbtn onClick={() => setmeal(breakfast)}>아침</Mealbtn>
+            <Mealbtn onClick={() => setmeal(lunch)}>점심</Mealbtn>
+            <Mealbtn onClick={() => setmeal(dinner)}>저녁</Mealbtn>
+            </MealbtnWrap>
+            </Mealwrap>
+            </>
+            : "데이터를 불러올수없음"}
         </Msgwrap>
     </_Interface>
     <_Interface>
@@ -183,9 +219,34 @@ display: flex;
 justify-content: center;
 align-items: center;
 width: 100%;
-height: 70%;
+height: 85%;
 `
 
 const Nodatamsg = styled.div`
 font-size: 16px;
+`
+
+const MealDate = styled.input`
+    width: 98%;
+`
+
+const Mealwrap = styled.div`
+    /* border: 1px solid #000000; */
+`
+
+const Mealtext = styled.pre`
+    padding: 20px;
+    border: 1px solid #000000;
+`
+
+const MealbtnWrap = styled.div`
+    display: flex;
+    justify-content: space-around;
+`
+
+const Mealbtn = styled.button`
+    border: 1px solid #000000;
+    background: none;
+    cursor: pointer;
+    padding: 5px 10px 5px 10px;
 `

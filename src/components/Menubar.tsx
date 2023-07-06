@@ -125,7 +125,6 @@ const Menubar = () => {
     } else {
     return (
         <>
-        {isMenuVisible && (
         <Navbar>
         <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/')} />
         <Menu>
@@ -135,7 +134,6 @@ const Menubar = () => {
             <LoginButton onClick={()=>navigate('/login')}>로그인</LoginButton>
         </Menu>
         </Navbar>
-        )}
         </>
     );
     }
