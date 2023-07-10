@@ -17,9 +17,10 @@ const Home = () => {
     let navigate = useNavigate();
     const [meal, setmeal] = useState("");
     const [mealdate, setmealdate] = useState("");
-    const [breakfast, setbreakfast] = useState("데이터가 없습니다.");
-    const [lunch, setlunch] = useState("데이터가 없습니다.");
-    const [dinner, setdinner] = useState("데이터가 없습니다.");
+    const [breakfast, setbreakfast] = useState("");
+    const [lunch, setlunch] = useState("");
+    const [dinner, setdinner] = useState("");
+    const [schedule, setschedule] = useState([]);
     const [phonenum, setphonenum] = useState("");
     const [Name, setName] = useState("");
     const [email, setemail] = useState("");
@@ -27,7 +28,80 @@ const Home = () => {
     const [ID, setID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
 
-    useEffect(() => {
+    interface TimetableData {
+        day: string;
+        data: {
+        time: string;
+        subject: string;
+        instructor: string;
+        }[];
+    }
+
+    const timetableData: TimetableData[] = [
+        {
+        day: '월요일',
+        data: [
+            { time: '1교시', subject: '자율', instructor: '장두' },
+            { time: '2교시', subject: '겜프32', instructor: '김준' },
+            { time: '3교시', subject: '겜프32', instructor: '김준' },
+            { time: '4교시', subject: '겜프32', instructor: '김준' },
+            { time: '5교시', subject: '겜프32', instructor: '김준' },
+            { time: '6교시', subject: '겜프32', instructor: '김준' },
+            { time: '7교시', subject: '겜프32', instructor: '김준' },
+        ],
+        },
+        {
+        day: '화요일',
+        data: [
+            { time: '1교시', subject: '드콘3', instructor: '임재' },
+            { time: '2교시', subject: '드콘3', instructor: '임재' },
+            { time: '3교시', subject: '드콘3', instructor: '임재' },
+            { time: '4교시', subject: '드콘3', instructor: '임재' },
+            { time: '5교시', subject: '스앱', instructor: '장두' },
+            { time: '6교시', subject: '스앱', instructor: '장두' },
+            { time: '7교시', subject: '스앱', instructor: '장두' },
+        ],
+        },
+        {
+            day: '수요일',
+            data: [
+                { time: '1교시', subject: '드콘3', instructor: '임재' },
+                { time: '2교시', subject: '드콘3', instructor: '임재' },
+                { time: '3교시', subject: '드콘3', instructor: '임재' },
+                { time: '4교시', subject: '드콘3', instructor: '임재' },
+                { time: '5교시', subject: '스앱', instructor: '장두' },
+                { time: '6교시', subject: '스앱', instructor: '장두' },
+                { time: '7교시', subject: '스앱', instructor: '장두' },
+            ],
+        },
+        {
+            day: '목요일',
+            data: [
+                { time: '1교시', subject: '드콘3', instructor: '임재' },
+                { time: '2교시', subject: '드콘3', instructor: '임재' },
+                { time: '3교시', subject: '드콘3', instructor: '임재' },
+                { time: '4교시', subject: '드콘3', instructor: '임재' },
+                { time: '5교시', subject: '스앱', instructor: '장두' },
+                { time: '6교시', subject: '스앱', instructor: '장두' },
+                { time: '7교시', subject: '스앱', instructor: '장두' },
+            ],
+        },
+        {
+            day: '금요일',
+            data: [
+                { time: '1교시', subject: '드콘3', instructor: '임재' },
+                { time: '2교시', subject: '드콘3', instructor: '임재' },
+                { time: '3교시', subject: '드콘3', instructor: '임재' },
+                { time: '4교시', subject: '드콘3', instructor: '임재' },
+                { time: '5교시', subject: '스앱', instructor: '장두' },
+                { time: '6교시', subject: '스앱', instructor: '장두' },
+                { time: '7교시', subject: '스앱', instructor: '장두' },
+            ],
+        },
+        // Add data for other days here
+    ];
+
+    useEffect(() => { //프로필 불러오기
         if (ID) {
             axiosInstance
             .post("/profile", { id: ID, job: job })
@@ -42,12 +116,13 @@ const Home = () => {
         }
         }, [ID, job]);
 
+        //날짜 데이터
         const handleDate = (e: { target: { value: React.SetStateAction<string>; }; }) => {
             const selectedDate = e.target.value;
             setmealdate(selectedDate);
         }
 
-        useEffect(() => {
+        useEffect(() => { // 날짜에 맞춰 급식 불러오기
             const fetchData = async () => {
             try {
                 const res = await axiosInstance.post("/meal", { DAY: mealdate.substring(2, 10).replace(/-/g, '') });
@@ -62,7 +137,7 @@ const Home = () => {
             fetchData();
         }, [mealdate]);
 
-    Channeltalk.boot({
+    Channeltalk.boot({ //채널톡
         "pluginKey": "aac0f50c-39b0-4629-939e-a5bc11441405", // fill your plugin key
         "memberId": ID, // fill user's member id
         "profile": { // fill user's profile
@@ -72,7 +147,7 @@ const Home = () => {
           "email": email, // fill user's landline number
     }});
 
-    useEffect(() => {
+    useEffect(() => { //급식 불러오기
         axiosInstance.post("/meal")
             .then(res => {
                 setmeal(res.data.lunch);
@@ -84,12 +159,23 @@ const Home = () => {
             .catch(() => {
                 alert("Request Failed")
             });
+
+            //시간표 불러오기
+        axiosInstance.post("/timeTable", {GRADE:"3", CLASS_NM:"2"})
+            .then(res => {
+                setschedule(res.data.data)
+                console.log(schedule)
+            })
+            .catch(() => {
+                alert("Request Failed")
+            });
     }, []);
 
     return (
     <>
     <Menubar/>
     {/* <_Notice>공지사항</_Notice> */}
+    <Wrap>
     <_Itfwrap>
     <_Interface>
         <Headerwrap>
@@ -116,7 +202,7 @@ const Home = () => {
         <Title1>🍚 급식표</Title1>
         </Headerwrap>
         <Msgwrap>
-            {meal !== undefined ? 
+            {/* {meal !== undefined ?  */}
             <>
             <Mealwrap>
                 <MealDate value={mealdate} type='date' onChange={handleDate}></MealDate>
@@ -128,25 +214,60 @@ const Home = () => {
             </MealbtnWrap>
             </Mealwrap>
             </>
-            : "데이터를 불러올수없음"}
+            {/* : "데이터를 불러올수없음"} */}
         </Msgwrap>
     </_Interface>
-    <_Interface>
+    <_Interface style={{overflow: 'hidden'}}>
         <Headerwrap>
         <Title1>⏰ 시간표</Title1>
         <Detail>더보기 <Detailsvg/></Detail>
         </Headerwrap>
         <Msgwrap>
-        <Nodatamsg>데이터없음</Nodatamsg>
+
+            <Table>
+        <thead>
+            <tr>
+            <Th>시간</Th>
+            {timetableData.map((day) => (
+                <Th key={day.day}>{day.day}</Th>
+            ))}
+            </tr>
+        </thead>
+        <tbody>
+            {Array.from({ length: 7 }).map((_, index) => (
+            <tr key={index + 1}>
+                <Td>{index + 1}교시</Td>
+                {timetableData.map((day) => {
+                const data = day.data.find((item) => item.time === `${index + 1}교시`);
+                return <Td key={day.day + data?.time}>
+                    {data ? (
+                    <>
+                        {data.subject}
+                        <br />
+                        {data.instructor}
+                    </>
+                    ) : ''}
+                </Td>
+                
+                })}
+            </tr>
+            ))}
+        </tbody>
+        </Table>
+
         </Msgwrap>
     </_Interface>
     </_Itfwrap>
-    
+    </Wrap>
     </>
     );
 };
 
 export default Home;
+
+const Wrap = styled.div`
+    margin-bottom: 50px;
+`
 
 const _Notice = styled.div`
 width: 90vw;
@@ -179,7 +300,7 @@ justify-content: space-between;
 
 const _Interface = styled.div`
 width: 44vw;
-height: 400px;
+height: 415px;
 margin-top: 13px;
 border: 1px solid #999999;
 border-radius: 15px;
@@ -250,3 +371,22 @@ const Mealbtn = styled.button`
     cursor: pointer;
     padding: 5px 10px 5px 10px;
 `
+
+
+const Table = styled.table`
+width: 100%;
+border-collapse: collapse;
+`;
+
+const Th = styled.th`
+border: 1px solid #ccc;
+padding: 8px;
+font-size: 13px;
+`;
+
+const Td = styled.td`
+border: 1px solid #ccc;
+padding: 5px;
+font-size: 12px;
+text-align: center;
+`;

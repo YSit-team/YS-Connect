@@ -47,41 +47,6 @@ const RentalRoom_S = () => {
     })
 
     }
-        // const RoomInfo = () => {
-        //   axiosInstance.post('/RoomRental/RoomStatus')
-        //     .then(res => {
-        //       const a = [];
-          
-        //       if(res.data.room1.is_available === 0){
-        //         a.push({id : 1, value : "1번부스" ,disabled : false})
-        //       } else{
-        //         a.push({id : 1, value : "1번부스" ,disabled : true})
-        //       }
-        //       if(res.data.room2.is_available === 0){
-        //         a.push({id : 2, value : "2번부스" ,disabled : false})
-        //       } else{
-        //         a.push({id : 2, value : "2번부스" ,disabled : true})
-        //       }
-        //       if(res.data.room3.is_available === 0){
-        //         a.push({id : 3, value : "3번부스" ,disabled : false})
-        //       } else{
-        //         a.push({id : 3, value : "3번부스" ,disabled : true})
-        //       }
-        //       if(res.data.room4.is_available === 0){
-        //         a.push({id : 4, value : "4번부스" ,disabled : false})
-        //       } else{
-        //         a.push({id : 4, value : "4번부스" ,disabled : true})
-        //       }
-          
-        //       setRoomData(a);
-        //       console.log(roomdata)
-        //       console.log(a)
-        //     })
-        //     .catch(error => {
-        //       // 오류 처리
-        //       console.log(error);
-        //     });
-        // }
         
         const RoomInfo = async() => {
           await axiosInstance.post('/RoomRental/RoomStatus')
