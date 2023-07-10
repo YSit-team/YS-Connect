@@ -21,7 +21,7 @@ const CommunityDetail = () => {
 
     console.log(id)
     const params = {
-        postID: "57"
+        postID: id
     }
 
     const handle = async (): Promise<void> => {
@@ -57,109 +57,186 @@ const CommunityDetail = () => {
     return (
     <>
     <Menubar/>
-    <h2>{postsData.title}</h2>
-    <h4>{postsData.content}</h4>
-    <div>{postsData.author}</div>
-    <div>게시일 : {postsData.date}</div>
-    <div>좋아요 : {postsData.likes}</div>
-    <div>조회수 : {postsData.views}</div>
+    <Wrapper>
+    <Title>{postsData.title}</Title>
+    <InfoWrapper>
+        <Profilewrap><Author>{postsData.author}</Author><Author style={{paddingLeft: "5px", paddingRight: "5px"}}>|</Author><Time>{postsData.date.substring(0, 16).replace(/-/g, '.').replace(/T/g, ' ')}</Time></Profilewrap>
+        <StatsWrapper>
+        <Stat>조회수 {postsData.views}</Stat>
+        <Stat>좋아요 {postsData.likes}</Stat>
+        </StatsWrapper>
+    </InfoWrapper>
+    <Content>
+        {postsData.content}
+    </Content>
+    <CommentWrapper>
+        <CommentInputWrapper>
+        <CommentAvatar src="/profile.jpeg" alt="Avatar" />
+        <CommentInput type="text" placeholder="댓글을 입력하세요" />
+        <CommentButton>작성</CommentButton>
+        </CommentInputWrapper>
+
+        <CommentItem>
+            <CommentContentWrap>
+                <CommentWriter>익명</CommentWriter>
+                <CommentContent>우하하 나는 댓글이다</CommentContent>
+                <CommentWriter>1시50분</CommentWriter>
+            </CommentContentWrap>
+
+        <ReplyWrapper>
+            <ReplyItem>
+                <CommentWriter>익명1</CommentWriter>
+                <ReplyContent>우짤ㅐㅈㅂ야ㅓ배야ㅓㅂ재ㅑ어배쟈</ReplyContent>
+                <ReplyContent>1시30분</ReplyContent>
+            </ReplyItem>
+
+            <ReplyItem>
+                <CommentWriter>익명2</CommentWriter>
+                <ReplyContent>하하하ㅏ</ReplyContent>
+                <ReplyContent>4시50분</ReplyContent>
+            </ReplyItem>
+        </ReplyWrapper>
+        </CommentItem>
+    </CommentWrapper>
+    </Wrapper>
     </>
     );
 };
 
 export default CommunityDetail;
 
-const _Wrap = styled.div`
-    margin-top: 100px;
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-template-areas:
-        "header header header"
-        ". listtitle ."
-        ". list ."
-        ". writetitle ."
-        ". write ."
-        ". btn .";
-`
+const Wrapper = styled.div`
+width: 100%;
+max-width: 800px;
+margin: 0 auto;
+padding: 20px;
+background-color: #fff;
+border: 1px solid #b1b1b1;
+margin-top: 100px;
+`;
 
-const _Header = styled.header`
-    width: 100%;
-    margin-top: 30px;
-    font-size: 28px;
-    font-weight: 750;
-    color: #000000;
-    text-align: center;
-    grid-area: header;
-`
+const Title = styled.h2`
+font-size: 28px;
+font-weight: bold;
+`;
 
-const _List = styled.div`
-    width: 700px;
-    font-size: 23px;
-    font-weight: 700;
-    color: #000000;
-    box-shadow: inset 0 -2px 0 #1E00D3;
-    padding-bottom: 10px;
-    margin-top: 10px;
-    grid-area: listtitle;
-`
+const Author = styled.p`
+font-size: 14px;
+color: #888;
+margin-bottom: 10px;
+`;
 
-const _Write = styled.div`
-    width: 700px;
-    font-size: 23px;
-    font-weight: 700;
-    color: #000000;
-    box-shadow: inset 0 -2px 0 #1E00D3;
-    padding-bottom: 10px;
-    margin-top: 10px;
-    grid-area: writetitle;
-`
 
-//제출버튼부모
-const Btnwrap = styled.div`
+const InfoWrapper = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid #000;
+margin-bottom: 20px;
+`;
+
+const Profilewrap = styled.div`
     display: flex;
-    justify-content: center;
-    grid-area: btn;
+    flex-direction: row;
+    justify-content: space-between;
 `
 
-//제출버튼
-interface Container{
-    bgcolor: any;
-    color: any;
-}
-const _SubmitBtn = styled.button<Container>`
-    width: 25vw;
-    height: 60px;
-    border: none;
-    color : ${props => props.color};
-    border-radius: 15px;
-    background: ${props => props.bgcolor};
-    margin: 5px;
-    margin-top: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    @media (max-width: 600px) {
-    font-size: 13px;
-    }
-`
+const Time = styled.p`
+font-size: 14px;
+color: #888;
+`;
 
-const _Writewrap = styled.div`
-    width: 100%;
+const StatsWrapper = styled.div`
+display: flex;
+align-items: center;
+`;
+
+const Stat = styled.p`
+font-size: 14px;
+color: #888;
+margin-left: 10px;
+`;
+
+const Content = styled.div`
+font-size: 16px;
+line-height: 1.6;
+margin-bottom: 30px;
+`;
+
+const CommentWrapper = styled.div`
+margin-top: 30px;
+`;
+
+const CommentInputWrapper = styled.div`
+display: flex;
+align-items: center;
+margin-bottom: 10px;
+`;
+
+const CommentAvatar = styled.img`
+width: 32px;
+height: 32px;
+border-radius: 50%;
+margin-right: 10px;
+`;
+
+const CommentInput = styled.input`
+flex: 1;
+height: 32px;
+padding: 6px 10px;
+border-radius: 16px;
+border: none;
+font-size: 14px;
+
+`;
+
+const CommentButton = styled.button`
+padding: 6px 12px;
+border-radius: 16px;
+background-color: #3366ff;
+color: #fff;
+font-size: 14px;
+font-weight: bold;
+cursor: pointer;
+border: none;
+`;
+
+const CommentItem = styled.div`
+margin-top: 10px;
+padding-left: 42px;
+`;
+
+const CommentContent = styled.p`
+font-size: 14px;
+line-height: 1.4;
+`;
+
+const CommentContentWrap = styled.div`
     display: flex;
-    flex-direction: column;
-    grid-area: write;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #888;
 `
 
-const _Inputtitle = styled.div`
-    font-size: 20px;
-    font-weight: 500;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    /* padding-left: 10px; */
-    text-align: center;
-    /* box-shadow: inset 0 -1px 0 #888888; */
-    display: flex;
-    justify-content: center;
+const CommentWriter = styled.div`
+    font-size: 14px;
+    line-height: 1.4;
 `
 
+const ReplyWrapper = styled.div`
+margin-left: 32px;
+`;
 
+const ReplyItem = styled.div`
+margin-top: 10px;
+padding-left: 42px;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+border-bottom: 1px solid #888;
+`;
+
+const ReplyContent = styled.p`
+font-size: 14px;
+line-height: 1.4;
+`;
