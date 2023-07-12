@@ -17,7 +17,6 @@ const EditProfile = () => {
     const [accountID, setaccountID] = useState("");
     const [email, setemail] = useState("");
     
-
     useEffect(() => {
         if (ID) {
             axiosInstance

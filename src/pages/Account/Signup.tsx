@@ -45,34 +45,6 @@ const Signup = () => {
     setemail(event.target.value);
     setError('');
   };
-  // const signUp = () => {
-  //   axios.post("http://www.zena.co.kr/api/register", {
-  //       // job: job, //학생, 교사
-  //       email: id, //이메일아이디
-  //       password: pw, //비밀번호
-  //       phoneNumber: tel, //전화번호
-  //       studentID: number, //학번
-  //       firstName: name, //이름
-  //       lastName: name
-  //     })
-  //     .then((res: {
-  //       data: any; status: number; 
-  //   }) => {
-  //       if (res.status == 200) {
-  //           navigate("/")
-  //           alert(res.data.message)
-
-  //       } else if (res.status == 202) {
-  //           //경고 => 메시지 res.data.message
-  //           alert(res.data.message)
-  //       } else {
-  //           //예외
-  //           alert(res.data.message)
-  //       }
-  //   })
-  //   .catch(()=>{alert("아이디 비번이 틀렸습니다")})
-  //   console.log(form);
-  // };
 
   const [passwordType,setPasswordType] = useState({
     type:'password',
@@ -103,7 +75,7 @@ const Signup = () => {
         onSubmit={(event: any) => {
           event.preventDefault();
 
-        axios.post("http://www.zena.co.kr/api/register", {
+        axios.post("https://www.zena.co.kr/api/register", {
             // job: job, //학생, 교사
             accountID: id,
             email: email, //이메일아이디
@@ -205,10 +177,11 @@ const Signup = () => {
               minLength={8}
               maxLength={12}
             />
-          </_InputWrap>
-          <_Logowrap onClick={handlePasswordType}>
+            <_Logowrap onClick={handlePasswordType}>
               {passwordType.visible ? <_Logo src='eye1.svg'></_Logo> : <_Logo src='eye2.svg'></_Logo>}
-          </_Logowrap>
+            </_Logowrap>
+          </_InputWrap>
+          
           <_InputWrap>
             <_Label>전화번호</_Label>
             <_Input
@@ -315,6 +288,7 @@ const _FormWrap = styled.div<ContainerProps>`
 
   @media (max-width: 600px) {
     box-shadow: none;
+    width: 100vw;
   }
 `;
 
@@ -340,37 +314,6 @@ const _TeamNameColor = styled.span`
   color: #1e00d3;
 `;
 
-const _BottonWrap = styled.div`
-  padding: 5px 20px 5px 20px;
-  margin: 0px 50px 0px 50px;
-
-  display: flex;
-`;
-
-const _JobBtn = styled.button`
-  padding: 5px 20px 5px 20px;
-  margin: 0px 50px 0px 50px;
-
-  color: #b7b7b7;
-
-  font-size: 20px;
-  font-weight: bold;
-  font-family: sans-serif;
-
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-
-const _Line = styled.span`
-  width: 1px;
-  height: 20px;
-
-  margin-top: 6px;
-
-  background-color: gray;
-`;
-
 const _Label = styled.label`
   font-size: 13px;
 
@@ -392,6 +335,10 @@ const _Input = styled.input`
 
   border-color: gray;
   outline: none;
+
+  @media (max-width: 600px) {
+    width: 85vw;
+  }
 `;
 
 const _InputWrap = styled.div`
@@ -413,6 +360,11 @@ const _SignUpBtn = styled.button`
 
   color: white;
   cursor: pointer;
+
+  @media (max-width: 600px) {
+    width: 90vw;
+    margin-bottom: 10px;
+  }
 `;
 
 const _SignUpBtnWrap = styled.div`
@@ -434,15 +386,23 @@ const _Logowrap = styled.div`
     z-index: 1;
     bottom: 35px;
     margin-right: 10px;
-    width: 10px;
-    margin-left: 87%;
-    margin-bottom: -19px;
+    margin-left: 95%;
+    height: 0;
+
+    @media (max-width: 600px) {
+      bottom: 38px;
+    }
 `;
 
 const Namewrap = styled.div`
   display: flex;
   width: 440px;
   margin: 0 auto;
+
+  @media (max-width: 600px) {
+    width: auto;
+    flex-direction: column;
+  }
 `
 
 const Nameinput = styled.input`
@@ -459,4 +419,8 @@ const Nameinput = styled.input`
 
   border-color: gray;
   outline: none;
+
+  @media (max-width: 600px) {
+    width: 85vw;
+  }
 `

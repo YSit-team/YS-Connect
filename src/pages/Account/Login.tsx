@@ -59,7 +59,7 @@ const UserLogin = () => {
                     //Rhcbrjfnfmfskffu
                 });
 
-                axios.post("http://www.zena.co.kr/api/login", {
+                axios.post("https://www.zena.co.kr/api/login", {
                     accountID : inputId,
                     password : inputPw,
                     job : job
@@ -100,7 +100,7 @@ const UserLogin = () => {
             {/* <_Logo src='YSIT22.png'></_Logo> */}
                 <_Subtitle>안녕하세요!</_Subtitle>
                 <_TeamName>
-                    I Can Do <_TeamNameColor>IT콘텐츠과</_TeamNameColor>
+                    <_TeamNameColor>영실커넥트</_TeamNameColor>입니다
                 </_TeamName>
                 <_BtnWrap>
                     <_Jobbtn type = 'button' style={{ color: color1 }} onClick={handleClick1}>학생</_Jobbtn>
@@ -174,6 +174,10 @@ const _Wrapper = styled.div`
 
     background: linear-gradient(to right bottom, #9786ff, #2805fc);
     animation: ${flow} 30s linear infinite;
+
+    @media (max-width: 600px) {
+        height: 73vh;
+    }
 `;
 
 const _TeamName = styled.div`
@@ -194,6 +198,11 @@ padding: 5px 20px 5px 20px;
 margin: 0px 50px 0px 50px;
 
 display: flex;
+align-items: center;
+
+@media (max-width: 600px) {
+    margin: 0px 20px 0px 20px;
+}
 `;
 
 const _Form = styled.div`
@@ -202,6 +211,7 @@ const _Form = styled.div`
 
     display: flex;
     flex-direction: column;
+    justify-content: center;
     width: 500px;
     height: 530px;
     margin: 0 auto;
@@ -217,10 +227,16 @@ const _Form = styled.div`
     > button {
         margin-top: 26px;
     }
+
+    @media (max-width: 600px) {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+    }
 `;
 
 const _Jobbtn = styled.button`
-    padding: 5px 20px 5px 20px;
     margin: 0px 30px 0px 30px;
     width: 200px;
     height: 47px;
@@ -234,13 +250,15 @@ const _Jobbtn = styled.button`
     background: none;
     border: none;
     cursor: pointer;
+    
+    @media (max-width: 600px) {
+        margin: 0px 10px 0px 10px;
+    }
 `;
 
 const _JobLine = styled.span`
-    width: 3px;
+    width: 1px;
     height: 20px;
-
-    margin-top: 12px;
 
     background-color: gray;
 `
@@ -248,8 +266,6 @@ const _JobLine = styled.span`
 const _Line = styled.span`
     width: 1px;
     height: 15px;
-
-    margin-top: 15px;
 
     background-color: rgb(174, 174, 174);
 `;
@@ -267,6 +283,7 @@ const _Subtitle = styled.div`
 const _FindWrap = styled.div`
     display: flex;
     justify-content: space-around;
+    align-items: center;
     //margin: 0 auto;
     
     margin-top: 30px;
@@ -275,7 +292,7 @@ const _FindWrap = styled.div`
 `;
 
 const _Find = styled.button`
-    width: 120px;
+    width: 160px;
     height: 47px;
     background: none;
     color: #666666;
@@ -283,11 +300,11 @@ const _Find = styled.button`
     cursor: pointer;
     font-family: 'Noto Sans';
     font-style: normal;
-    /* font-weight: 600; */
     font-size: 15px;
     font-weight: bold;
-    /* margin-left: 10px;
-    margin-right: 10px; */
+    @media (max-width: 600px) {
+        font-size: 13px;
+    }
 `;
 
 const _Label = styled.label`
@@ -311,22 +328,10 @@ padding-left: 10px;
 
 border-color: gray;
 outline: none;
-`;
 
-const _PWInput = styled.input`
-width: 365px;
-height: 50px;
-margin-top: 3px;
-font-weight: bold;
-border: 1px solid #e5e5e5;
-:focus {
-    border: 1.8px solid blue;
-}
-border-radius: 12px;
-padding-left: 10px;
-
-border-color: gray;
-outline: none;
+@media (max-width: 600px) {
+        width: 88vw;
+    }
 `;
 
 const _InputWrap = styled.div`
@@ -356,4 +361,8 @@ const _Submitbtn = styled.button`
     font-weight: bold;
     border: none;
     cursor: pointer;
+    
+    @media (max-width: 600px) {
+        width: 92vw;
+    }
 `

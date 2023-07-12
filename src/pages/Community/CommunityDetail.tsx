@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import axios from 'axios';
 import Menubar from '../../components/Menubar'
 import { useParams } from 'react-router-dom';
@@ -18,6 +18,9 @@ const CommunityDetail = () => {
     const { id } = useParams();
 
     const [postsData, setPostsData] = useState<PostData | null>(null);
+
+    const [commentsData, setCommentsData] = useState([])
+    const [repliesData, setRepliesData] = useState([])
 
     console.log(id)
     const params = {
@@ -44,15 +47,35 @@ const CommunityDetail = () => {
         }
     };
 
+    const commentCheck = async() => {
+        await axiosInstance.post('/Community/commentCheck', { postID: id })
+            .then((res) => {
+                setCommentsData(res.data.data)
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+    
+    const repliesCheck = async() => {
+        await axiosInstance.post('/Community/repliesCheck', { postID: id })
+            .then((res) => {
+                setRepliesData(res.data.data)
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
     useEffect(() => {
         handle()
+        commentCheck()
+        repliesCheck()
     }, [])
 
     if (postsData === null) {
-        return <div>Loading...</div>;
+        return <div>불러오는중...</div>;
     }
-    // console.log(postsData)
-
+    console.log(postsData)
+    console.log(commentsData)
+    console.log(repliesData)
     
     return (
     <>
@@ -72,31 +95,44 @@ const CommunityDetail = () => {
     <CommentWrapper>
         <CommentInputWrapper>
         <CommentAvatar src="/profile.jpeg" alt="Avatar" />
+
+        {/* <_Inputwrap> */}
         <CommentInput type="text" placeholder="댓글을 입력하세요" />
+        <Underline/>
+        {/* </_Inputwrap> */}
+        
         <CommentButton>작성</CommentButton>
         </CommentInputWrapper>
 
-        <CommentItem>
-            <CommentContentWrap>
-                <CommentWriter>익명</CommentWriter>
-                <CommentContent>우하하 나는 댓글이다</CommentContent>
-                <CommentWriter>1시50분</CommentWriter>
-            </CommentContentWrap>
+        {commentsData &&
+            commentsData.map((data:any) => {
+                return (
+                    <CommentItem key={data.id}>
+                    <CommentContentWrap>
+                        <CommentWriter>{data.author}</CommentWriter>
+                        <CommentContent>{data.content}</CommentContent>
+                        <CommentWriter>{data.date.substring(5, 16).replace(/-/g, '.').replace(/T/g, ' ')}</CommentWriter>
+                    </CommentContentWrap>
+                    {repliesData &&
+                        repliesData.map((_data:any) => {
+                        if (data.id === _data.comment_id) {
+                            return (
+                            <ReplyWrapper key={_data.id}>
+                                <ReplyItem>
+                                <CommentWriter>{_data.author}</CommentWriter>
+                                <ReplyContent>{_data.content}</ReplyContent>
+                                <ReplyContent>{_data.date.substring(5, 16).replace(/-/g, '.').replace(/T/g, ' ')}</ReplyContent>
+                                </ReplyItem>
+                            </ReplyWrapper>
+                            );
+                        }
+                        return null; // Return null if the reply doesn't belong to the current comment
+                        })}
+                    </CommentItem>
+                );
+        })}
 
-        <ReplyWrapper>
-            <ReplyItem>
-                <CommentWriter>익명1</CommentWriter>
-                <ReplyContent>우짤ㅐㅈㅂ야ㅓ배야ㅓㅂ재ㅑ어배쟈</ReplyContent>
-                <ReplyContent>1시30분</ReplyContent>
-            </ReplyItem>
 
-            <ReplyItem>
-                <CommentWriter>익명2</CommentWriter>
-                <ReplyContent>하하하ㅏ</ReplyContent>
-                <ReplyContent>4시50분</ReplyContent>
-            </ReplyItem>
-        </ReplyWrapper>
-        </CommentItem>
     </CommentWrapper>
     </Wrapper>
     </>
@@ -171,6 +207,8 @@ const CommentInputWrapper = styled.div`
 display: flex;
 align-items: center;
 margin-bottom: 10px;
+justify-content: center;
+position: relative;
 `;
 
 const CommentAvatar = styled.img`
@@ -184,11 +222,27 @@ const CommentInput = styled.input`
 flex: 1;
 height: 32px;
 padding: 6px 10px;
-border-radius: 16px;
 border: none;
 font-size: 14px;
-
+outline: none;
 `;
+
+const Underline = styled.div`
+position: absolute;
+bottom: 0;
+width: 88%;
+height: 1.5px;
+background-color: #1e00d3;
+transform-origin: center;
+transform: scaleX(0);
+transition: transform 0.3s;
+
+${CommentInput}:focus ~ & {
+    transform: scaleX(1);
+}
+`;
+
+
 
 const CommentButton = styled.button`
 padding: 6px 12px;
@@ -216,6 +270,7 @@ const CommentContentWrap = styled.div`
     flex-direction: row;
     justify-content: space-between;
     border-bottom: 1px solid #888;
+    align-items: center;
 `
 
 const CommentWriter = styled.div`
@@ -234,6 +289,7 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 border-bottom: 1px solid #888;
+align-items: center;
 `;
 
 const ReplyContent = styled.p`

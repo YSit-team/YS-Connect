@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Menubar from '../components/rew';
 
 const products = [
 {
@@ -46,6 +47,8 @@ const filteredProducts = products.filter(product => {
 });
 
 return (
+    <>
+    <Menubar/>
     <div>
     <label htmlFor="sort-select">Sort by:</label>
     <div>
@@ -65,6 +68,7 @@ return (
         ))}
     </ul>
     </div>
+    </>
 );
 };
 

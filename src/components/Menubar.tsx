@@ -145,7 +145,7 @@ export default Menubar;
     const Navbar = styled.nav`
     position: fixed;
     top: 0;
-    width: 100%;
+    width: 100vw;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
@@ -158,13 +158,17 @@ export default Menubar;
         width: 45px;
         height: 45px;
         cursor: pointer;
+        @media (max-width: 600px) {
+            width: 35px;
+            height: 35px;
+        }
     `;
     
     const Menu = styled.div`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 100%;
+        width: 100vw;
         
     `;
     
@@ -175,6 +179,14 @@ export default Menubar;
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
+
+    /* 스크롤바 숨김 스타일 */
+    -ms-overflow-style: none; /* IE 및 Edge용 */
+    scrollbar-width: none; /* Firefox 용 */
+
+    &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera 용 */
+    }
     `;
     
     const MenuItem = styled.li`
@@ -210,6 +222,9 @@ export default Menubar;
     font-weight: bold;
     border-style: none;
     cursor: pointer;
+    @media (max-width: 600px) {
+        margin-right: 60px;
+    }
 `;
 
 const Logoutbtn = styled.span`
@@ -229,6 +244,9 @@ const Namewrap = styled.div`
     align-items: center;
     justify-content: space-around;
     margin-right: 15px;
+    @media (max-width: 600px) {
+        margin-right: 35px;
+    }
 `
 
 const Name = styled.button`
@@ -286,6 +304,11 @@ background-color: white;
 width: 300px;
 height: 145px;
 padding: 20px;
+@media (max-width: 600px) {
+    margin-right: 25px;
+    width: 220px;
+    height: 125px;
+}
 `;
 
 const ProfileHeader = styled.div`
@@ -299,12 +322,18 @@ const _modalname = styled.div`
     font-size: 18px;
     font-weight: bold;
     color: #fff;
+    @media (max-width: 600px) {
+        font-size: 16px;
+    }
 `
 
 const Email = styled.p`
     margin: 5px 0 0;
     font-size: 14px;
     color: #fff;
+    @media (max-width: 600px) {
+        font-size: 13px;
+    }
     `;
 
 const ButtonWrapper = styled.div`
@@ -330,6 +359,10 @@ const IconButton = styled.button`
     border-radius: 50px;
     background-color: #fff;
     cursor: pointer;
+    @media (max-width: 600px) {
+        width: 45px;
+        height: 45px;
+    }
 `;
 
 const Icon = styled.img`

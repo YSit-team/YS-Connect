@@ -61,7 +61,7 @@ const CommunityWrite = () => {
         <div>
             <form onSubmit={(event: any) => {
                 event.preventDefault();
-                axios.post("http://www.zena.co.kr/api/Community/postsWrite",{
+                axios.post("https://www.zena.co.kr/api/Community/postsWrite",{
                     id:id, 
                     name:name, 
                     title:title, 

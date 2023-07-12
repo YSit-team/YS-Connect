@@ -19,7 +19,7 @@ const AddCamera = () => {
             Image,
             sort
         });
-        axios.post("http://www.zena.co.kr/api/register", {
+        axios.post("https://www.zena.co.kr/api/register", {
             name: name, //이름
             url: Image,
             sort: sort

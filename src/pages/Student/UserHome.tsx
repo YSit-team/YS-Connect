@@ -37,70 +37,6 @@ const Home = () => {
         }[];
     }
 
-    const timetableData: TimetableData[] = [
-        {
-        day: '월요일',
-        data: [
-            { time: '1교시', subject: '자율', instructor: '장두' },
-            { time: '2교시', subject: '겜프32', instructor: '김준' },
-            { time: '3교시', subject: '겜프32', instructor: '김준' },
-            { time: '4교시', subject: '겜프32', instructor: '김준' },
-            { time: '5교시', subject: '겜프32', instructor: '김준' },
-            { time: '6교시', subject: '겜프32', instructor: '김준' },
-            { time: '7교시', subject: '겜프32', instructor: '김준' },
-        ],
-        },
-        {
-        day: '화요일',
-        data: [
-            { time: '1교시', subject: '드콘3', instructor: '임재' },
-            { time: '2교시', subject: '드콘3', instructor: '임재' },
-            { time: '3교시', subject: '드콘3', instructor: '임재' },
-            { time: '4교시', subject: '드콘3', instructor: '임재' },
-            { time: '5교시', subject: '스앱', instructor: '장두' },
-            { time: '6교시', subject: '스앱', instructor: '장두' },
-            { time: '7교시', subject: '스앱', instructor: '장두' },
-        ],
-        },
-        {
-            day: '수요일',
-            data: [
-                { time: '1교시', subject: '드콘3', instructor: '임재' },
-                { time: '2교시', subject: '드콘3', instructor: '임재' },
-                { time: '3교시', subject: '드콘3', instructor: '임재' },
-                { time: '4교시', subject: '드콘3', instructor: '임재' },
-                { time: '5교시', subject: '스앱', instructor: '장두' },
-                { time: '6교시', subject: '스앱', instructor: '장두' },
-                { time: '7교시', subject: '스앱', instructor: '장두' },
-            ],
-        },
-        {
-            day: '목요일',
-            data: [
-                { time: '1교시', subject: '드콘3', instructor: '임재' },
-                { time: '2교시', subject: '드콘3', instructor: '임재' },
-                { time: '3교시', subject: '드콘3', instructor: '임재' },
-                { time: '4교시', subject: '드콘3', instructor: '임재' },
-                { time: '5교시', subject: '스앱', instructor: '장두' },
-                { time: '6교시', subject: '스앱', instructor: '장두' },
-                { time: '7교시', subject: '스앱', instructor: '장두' },
-            ],
-        },
-        {
-            day: '금요일',
-            data: [
-                { time: '1교시', subject: '드콘3', instructor: '임재' },
-                { time: '2교시', subject: '드콘3', instructor: '임재' },
-                { time: '3교시', subject: '드콘3', instructor: '임재' },
-                { time: '4교시', subject: '드콘3', instructor: '임재' },
-                { time: '5교시', subject: '스앱', instructor: '장두' },
-                { time: '6교시', subject: '스앱', instructor: '장두' },
-                { time: '7교시', subject: '스앱', instructor: '장두' },
-            ],
-        },
-        // Add data for other days here
-    ];
-
     useEffect(() => { //프로필 불러오기
         if (ID) {
             axiosInstance
@@ -130,7 +66,7 @@ const Home = () => {
                 setlunch(res.data.lunch);
                 setdinner(res.data.dinner);
             } catch (error) {
-                alert("Request Failed");
+                alert("급식 불러오기 실패");
             }
             };
         
@@ -157,17 +93,17 @@ const Home = () => {
                 console.log(meal);
             })
             .catch(() => {
-                alert("Request Failed")
+                alert("오늘 급식 불러오기 실패")
             });
 
             //시간표 불러오기
-        axiosInstance.post("/timeTable", {GRADE:"3", CLASS_NM:"2"})
+        axiosInstance.post("/timeTable", {GRADE:studentID.substring(0,1), CLASS_NM:studentID.substring(2,3)})
             .then(res => {
                 setschedule(res.data.data)
                 console.log(schedule)
             })
             .catch(() => {
-                alert("Request Failed")
+                alert("시간표 불러오기 실패")
             });
     }, []);
 
@@ -218,7 +154,7 @@ const Home = () => {
         </Msgwrap>
     </_Interface>
     <_Interface style={{overflow: 'hidden'}}>
-        <Headerwrap>
+        <Headerwrap style={{border:"none"}}>
         <Title1>⏰ 시간표</Title1>
         <Detail>더보기 <Detailsvg/></Detail>
         </Headerwrap>
@@ -228,7 +164,7 @@ const Home = () => {
         <thead>
             <tr>
             <Th>시간</Th>
-            {timetableData.map((day) => (
+            {schedule.map((day:any) => (
                 <Th key={day.day}>{day.day}</Th>
             ))}
             </tr>
@@ -237,8 +173,8 @@ const Home = () => {
             {Array.from({ length: 7 }).map((_, index) => (
             <tr key={index + 1}>
                 <Td>{index + 1}교시</Td>
-                {timetableData.map((day) => {
-                const data = day.data.find((item) => item.time === `${index + 1}교시`);
+                {schedule.map((day:any) => {
+                const data = day.data.find((item:any) => item.time === `${index + 1}교시`);
                 return <Td key={day.day + data?.time}>
                     {data ? (
                     <>
@@ -267,17 +203,12 @@ export default Home;
 
 const Wrap = styled.div`
     margin-bottom: 50px;
-`
+    width: 100vw;
+    height: 100vh;
 
-const _Notice = styled.div`
-width: 90vw;
-height: 20vh;
-margin-top: 80px;
-margin-left:5%;
-
-background: #D9D9D9;
-border-radius: 20px;
-text-align: center;
+    @media (max-width: 600px) {
+        margin-top: 60px;
+    }
 `
 
 const _Itfwrap = styled.div`
@@ -289,12 +220,15 @@ display: flex;
 justify-content: space-between;
 
 :last-child{
-    margin-top: 20px;
+    margin-top: 35px;
 }
 
 @media (max-width: 600px) {
         flex-direction: column;
         height: auto;
+        :last-child{
+            margin-top: 0;
+        }
     }
 `
 
