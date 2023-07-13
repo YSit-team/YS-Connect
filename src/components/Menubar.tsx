@@ -10,8 +10,8 @@ const Menubar = () => {
     const [ID, setID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [name, setname] = useState("");
-    const [email, setemail] = useState("");
+    const [name, setname] = useState(sessionStorage.getItem('name'));
+    const [email, setemail] = useState(sessionStorage.getItem('email'));
 
     const Logout = () => {
         sessionStorage.removeItem('userId');
@@ -23,10 +23,12 @@ const Menubar = () => {
     if (ID) {
         axiosInstance
         .post("/profile", { id: ID, job: job })
-        .then((response) => {
-            console.log(response.data);
-            setname(response.data.firstName+response.data.lastName)
-            setemail(response.data.email)
+        .then((res) => {
+            console.log(res.data);
+            sessionStorage.setItem('name', res.data.firstName + res.data.lastName);
+            sessionStorage.setItem('phoneNum', res.data.phoneNumber);
+            sessionStorage.setItem('studentID', res.data.studentID);
+            sessionStorage.setItem('email', res.data.email);
         })
         .catch((error) => console.log(error));
     }
@@ -37,7 +39,7 @@ const Menubar = () => {
             return (
                 <>
                 <Navbar>
-                <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/home')} />
+                <Logo src="/YSlogo.png" alt="logo" onClick={() => navigate('/home')} />
                 <Menu>
                     <MenuItemWrapper>
                     <MenuItem onClick={() => navigate('/rental')}>
@@ -99,7 +101,7 @@ const Menubar = () => {
             return (
                 <>
                 <Navbar>
-                <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/rentallist')} />
+                <Logo src="/YSlogo.png" alt="logo" onClick={() => navigate('/rentallist')} />
                 <Menu>
                     <MenuItemWrapper>
                     <MenuItem onClick={() => navigate('/rentallist')}>
@@ -126,7 +128,7 @@ const Menubar = () => {
     return (
         <>
         <Navbar>
-        <Logo src="/YSIT-logo.png" alt="logo" onClick={() => navigate('/')} />
+        <Logo src="/YSlogo.png" alt="logo" onClick={() => navigate('/')} />
         <Menu>
             <MenuItemWrapper>
             
@@ -217,7 +219,7 @@ export default Menubar;
     color: #fff;
     padding: 0.5rem 0.7rem;
     border-radius: 0.3rem;
-    margin-right : 2rem;
+    margin-right : 4.5rem;
     font-size: 0.9rem;
     font-weight: bold;
     border-style: none;
@@ -243,7 +245,7 @@ const Namewrap = styled.div`
     width: 150px;
     align-items: center;
     justify-content: space-around;
-    margin-right: 15px;
+    margin-right: 35px;
     @media (max-width: 600px) {
         margin-right: 35px;
     }

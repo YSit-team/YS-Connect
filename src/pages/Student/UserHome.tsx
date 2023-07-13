@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Menubar from '../../components/Menubar';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 import axiosInstance from '../../api/API_Server';
 import Channeltalk from '../../api/Channeltalk';
 
@@ -13,6 +13,13 @@ return (
 )
 }
 
+interface RentalDataItem {
+    created_at: any;
+    id: number;
+    index: number;
+    type: number;
+    }
+
 const Home = () => {
     let navigate = useNavigate();
     const [meal, setmeal] = useState("");
@@ -21,58 +28,18 @@ const Home = () => {
     const [lunch, setlunch] = useState("");
     const [dinner, setdinner] = useState("");
     const [schedule, setschedule] = useState([]);
-    const [phonenum, setphonenum] = useState("");
-    const [Name, setName] = useState("");
-    const [email, setemail] = useState("");
-    const [studentID, setstudentID] = useState("");
+    const [phonenum, setphonenum] = useState(sessionStorage.getItem('phoneNum'));
+    const [Name, setName] = useState(sessionStorage.getItem('name'));
+    const [email, setemail] = useState(sessionStorage.getItem('email'));
+    const [studentID, setstudentID] : any = useState(sessionStorage.getItem('studentID'));
     const [ID, setID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
-
-    interface TimetableData {
-        day: string;
-        data: {
-        time: string;
-        subject: string;
-        instructor: string;
-        }[];
-    }
-
-    useEffect(() => { //프로필 불러오기
-        if (ID) {
-            axiosInstance
-            .post("/profile", { id: ID, job: job })
-            .then((response) => {
-                console.log(response.data);
-                setName(response.data.firstName+response.data.lastName)
-                setphonenum(response.data.phoneNumber)
-                setstudentID(response.data.studentID)
-                setemail(response.data.email)
-            })
-            .catch((error) => console.log(error));
-        }
-        }, [ID, job]);
-
-        //날짜 데이터
-        const handleDate = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-            const selectedDate = e.target.value;
-            setmealdate(selectedDate);
-        }
-
-        useEffect(() => { // 날짜에 맞춰 급식 불러오기
-            const fetchData = async () => {
-            try {
-                const res = await axiosInstance.post("/meal", { DAY: mealdate.substring(2, 10).replace(/-/g, '') });
-                setbreakfast(res.data.breakfast);
-                setlunch(res.data.lunch);
-                setdinner(res.data.dinner);
-            } catch (error) {
-                alert("급식 불러오기 실패");
-            }
-            };
-        
-            fetchData();
-        }, [mealdate]);
-
+    const [grade, setGrade] = useState("");
+    const [classNum, setClassnum] = useState("");
+    const [PostData, setPostData] = useState([])
+    const [rentalData, setRentalData] = useState<RentalDataItem[]>([]);
+    const [type, setType] = useState<number>(0);
+    
     Channeltalk.boot({ //채널톡
         "pluginKey": "aac0f50c-39b0-4629-939e-a5bc11441405", // fill your plugin key
         "memberId": ID, // fill user's member id
@@ -83,29 +50,111 @@ const Home = () => {
           "email": email, // fill user's landline number
     }});
 
-    useEffect(() => { //급식 불러오기
-        axiosInstance.post("/meal")
-            .then(res => {
-                setmeal(res.data.lunch);
-                setbreakfast(res.data.breakfast);
-                setlunch(res.data.lunch);
-                setdinner(res.data.dinner);
-                console.log(meal);
-            })
-            .catch(() => {
-                alert("오늘 급식 불러오기 실패")
-            });
+    
+    const params = { //페이지 수 설정
+        page: 1,
+        limit: 8,
+    }
+    
+    useEffect(() => { //게시판 불러오기
+            const handle = async() => {
+                await axiosInstance.get('/Community/postInquiry', { params })
+                    .then(async (res) => {
+                        if (res.status === 200) {
+                            console.log(res.data.data)
+                            setPostData(res.data.data)
+                        } else if (res.status === 400) {
+                            alert("코드 400")
+                        } else if (res.status === 500) {
+                            alert("코드 500")
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+            }
+            handle()
+            console.log(PostData)
+        }, [])
 
-            //시간표 불러오기
-        axiosInstance.post("/timeTable", {GRADE:studentID.substring(0,1), CLASS_NM:studentID.substring(2,3)})
-            .then(res => {
-                setschedule(res.data.data)
-                console.log(schedule)
+        useEffect(() => { //대여상태 불러오기
+            axiosInstance
+            .post("/EquipmentRental/RentalInquiry")
+            .then((res) => {
+                setRentalData(res.data.data);
+                setType(res.data.data.type);
+                console.log(res.data);
             })
             .catch(() => {
-                alert("시간표 불러오기 실패")
+                alert("요청 실패");
             });
-    }, []);
+        }, []);
+        
+        const getStatusLabelColor = (type: number): string => {
+            if (type === 2 || type === 4) {
+              return "#999999"; // Gray color for 대기중
+            } else if (type === 3) {
+              return "#00b815"; // Green color for 수락됨
+            } else {
+              return ""; // Default color
+            }
+        };
+        
+        //날짜 데이터
+        const handleDate = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+                const selectedDate = e.target.value;
+                setmealdate(selectedDate);
+        }
+
+        useEffect(() => { // 날짜에 맞춰 급식 불러오기
+            const fetchData = async () => {
+                try {
+                    const res = await axiosInstance.post("/meal", { DAY: mealdate.substring(2, 10).replace(/-/g, '') });
+                    setbreakfast(res.data.breakfast);
+                    setlunch(res.data.lunch);
+                    setdinner(res.data.dinner);
+                } catch (error) {
+                alert("급식 불러오기 실패");
+            }
+            };
+            
+            fetchData();
+        }, [mealdate]);
+
+        useEffect(() => { //오늘 급식 불러오기
+            axiosInstance.post("/meal")
+                .then(res => {
+                    setmeal(res.data.lunch);
+                    setbreakfast(res.data.breakfast);
+                    setlunch(res.data.lunch);
+                    setdinner(res.data.dinner);
+                    console.log(meal);
+                })
+                .catch(() => {
+                    alert("오늘 급식 불러오기 실패")
+                });
+        }, []);
+
+        useEffect(() => { //시간표 불러오기
+            const grade = studentID.substring(0, 1);
+            const classNum = studentID.substring(2, 3)
+        
+            const fetchTimetable = async () => {
+                if (grade && classNum) { // grade와 classNum 값이 모두 존재할 때만 실행
+                    try {
+                    const res = await axiosInstance.post("/timeTable", { GRADE:grade, CLASS_NM:classNum});
+                        setschedule(res.data.data);
+                        console.log(schedule);
+                    } catch (error) {
+                    alert("시간표 불러오기 실패");
+                    }
+                }
+                };
+        
+            fetchTimetable();
+        }, [grade, classNum]);
+        
+
+
 
     return (
     <>
@@ -113,23 +162,80 @@ const Home = () => {
     {/* <_Notice>공지사항</_Notice> */}
     <Wrap>
     <_Itfwrap>
-    <_Interface>
-        <Headerwrap>
+    <_Interface style={{overflow: 'hidden'}}>
+        <Headerwrap style={{padding:"0", border:"none"}}>
         <Title1>📝 게시판</Title1>
         <Detail onClick={()=>navigate('/community')}>더보기 <Detailsvg/></Detail>
         </Headerwrap>
-        <Msgwrap>
-        <Nodatamsg>데이터없음</Nodatamsg>
-        </Msgwrap>
+
+        <_ListHead>
+            <_Title>제목</_Title>
+            <_Name>작성자</_Name>
+            <_Time>작성일</_Time>
+            <_Views>조회</_Views>
+            {/* <_Likes>좋아요</_Likes> */}
+        </_ListHead>
+
+        <Conwrap>
+        {PostData.map((item: any, i: any) => (
+            <_Item className='list-item' key={item.id}>
+                <_Title>
+                    <Link to={`/communitydetail/${item.id}`} style={{ textDecoration: 'none', color: '#000000'}}>
+                        <div>{item.title}</div>
+                    </Link>
+                </_Title>
+                <_Name>{item.author}</_Name>
+                <_Time>{item.date.substring(0, 11).replace(/-/g, '.').replace(/T/g, ' ')}</_Time>
+                <_Views>{item.views}</_Views>
+                {/* <_Likes>{item.likes}</_Likes> */}
+            </_Item>
+        ))}
+        </Conwrap>
     </_Interface>
     <_Interface>
-        <Headerwrap>
+        <Headerwrap style={{padding:"0", border:"none"}}>
         <Title1>📷 대여/반납</Title1>
-        <Detail onClick={()=>navigate('/rental')}>더보기 <Detailsvg/></Detail>
+        <Detail onClick={()=>navigate('/status')}>더보기 <Detailsvg/></Detail>
         </Headerwrap>
-        <Msgwrap>
-        <Nodatamsg>데이터없음</Nodatamsg>
-        </Msgwrap>
+        <Conwrap>
+        {rentalData.filter((item) => ID !== null && item.id.toString() === ID).map((item) => (
+            <div key={item.id}>
+                <_Graybar>
+                <div>날짜</div>
+                <div>내용</div>
+                <div>상태</div>
+                {item.type === 2 ? "" : item.type === 3 ? <div>{"버튼"}</div> : ""}
+                </_Graybar>
+
+                <_Link key={item.id} to={``}>
+                <Listwrap key={item.id}>
+                <_List>{item.created_at.substring(5, 16).replace(/-/g, '/').replace(/T/g, ' ')}</_List>
+                <_List>{item.type === 2 || item.type === 3 ? "기자재대여신청" : item.type === 4 ? "기자재반납신청" : ""}</_List>
+                <Statuswrap>
+                    <_Liststatus style={{ color: getStatusLabelColor(item.type) }}>
+                    <Dot style={{ backgroundColor: getStatusLabelColor(item.type) }}/>
+                    {item.type === 2 || item.type === 4? "대기중" : item.type === 3 ? "수락됨" : ""}
+                    </_Liststatus>
+                </Statuswrap>
+                {item.type === 2||item.type === 4 ? "" : item.type === 3 ? (<_returnwrap><_returnbtn
+                    onClick={()=>{
+                        axiosInstance.post('/v1/EquipmentRental/RentalStop', {
+                            id: ID,
+                        })
+                        .then(response => {
+                            alert("반납신청이 완료되었습니다.");
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            alert("에러");
+                        });
+                    }}
+                >{"반납하기"}</_returnbtn></_returnwrap>) : ("")}
+                </Listwrap>
+                </_Link>
+            </div>
+        ))}
+        </Conwrap>
     </_Interface>
     </_Itfwrap>
     <_Itfwrap>
@@ -156,7 +262,6 @@ const Home = () => {
     <_Interface style={{overflow: 'hidden'}}>
         <Headerwrap style={{border:"none"}}>
         <Title1>⏰ 시간표</Title1>
-        <Detail>더보기 <Detailsvg/></Detail>
         </Headerwrap>
         <Msgwrap>
 
@@ -202,12 +307,13 @@ const Home = () => {
 export default Home;
 
 const Wrap = styled.div`
-    margin-bottom: 50px;
     width: 100vw;
-    height: 100vh;
+    height: 111.5vh;
+    
 
     @media (max-width: 600px) {
         margin-top: 60px;
+        height: 100vh;
     }
 `
 
@@ -324,3 +430,151 @@ padding: 5px;
 font-size: 12px;
 text-align: center;
 `;
+
+
+//게시판 스타일코드
+const _ListHead = styled.div`
+    > div {
+        display: inline-block;
+        //background-color: yellow;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    font-size: 0px;
+
+    padding: 10px 0;
+    border-top: 2px solid #000;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+`
+
+const Conwrap = styled.div`
+    
+`
+
+const _Item = styled.div`
+    > div {
+        display: inline-block;
+        //background-color: yellow;
+        font-size: 14px;
+    }
+
+    padding: 9.55px 0;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+`
+
+const _Title = styled.div`
+    :hover {
+        text-decoration: underline;
+    }
+    width: 33%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+`
+const _Name = styled.div`
+    text-align: center;
+    width: 10%;
+    
+    @media (max-width: 600px) {
+        width: 13%;
+    }
+`
+const _Time = styled.div`
+    text-align: center;
+    width: 20%;
+    
+`
+const _Views = styled.div`
+    text-align: center;
+    width: 10%;
+`
+const _Likes = styled.div`
+    text-align: center;
+    width: 10%;
+`
+
+
+//반납상태확인 스타일코드
+const _Graybar = styled.div`
+    > div {
+        display: inline-block;
+        //background-color: yellow;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        width: 130px;
+    }
+    font-size: 0px;
+
+    padding: 10px 0;
+    border-top: 2px solid #000;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+`
+
+const Listwrap = styled.ul`
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 0.8px solid #999999;
+    cursor: pointer;
+`
+
+const _List = styled.li`
+    font-weight: 400;
+    width: 130px;
+    text-align: center;
+`
+
+const Statuswrap = styled.ul`
+width: 130px;
+`;
+
+const Dot = styled.span`
+    position: absolute;
+    left: 1.8em;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background-color: #00b815;
+    border-radius: 50%;
+`;
+
+const _Liststatus = styled.li`
+    list-style-type: none;
+    text-align: center;
+    color: #00b815;
+    position: relative;
+`;
+
+const _Link = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+`
+const _returnwrap = styled.div`
+    width: 130px;
+    display: flex;
+    justify-content: center;
+`
+const _returnbtn = styled.span`
+    background-color: #6f6f6f;
+    color: #fff;
+    padding: 0.2rem 0.7rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-style: none;
+    cursor: pointer;
+`

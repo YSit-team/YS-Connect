@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled,{keyframes} from 'styled-components';
-import TeamName from '../../components/TeamName';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
