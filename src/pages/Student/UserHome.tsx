@@ -28,12 +28,13 @@ const Home = () => {
     const [lunch, setlunch] = useState("");
     const [dinner, setdinner] = useState("");
     const [schedule, setschedule] = useState([]);
-    const [phonenum, setphonenum] = useState(sessionStorage.getItem('phoneNum'));
-    const [Name, setName] = useState(sessionStorage.getItem('name'));
-    const [email, setemail] = useState(sessionStorage.getItem('email'));
-    const [studentID, setstudentID] : any = useState(sessionStorage.getItem('studentID'));
-    const [ID, setID] = useState(sessionStorage.getItem('userId'));
-    const [job, setjob] = useState(sessionStorage.getItem('job'));
+    const [phonenum, setphonenum] = useState(sessionStorage.getItem('phoneNum') || "");
+    const [Name, setName] = useState(sessionStorage.getItem('name') || "");
+    const [email, setemail] = useState(sessionStorage.getItem('email') || "");
+    const [studentID, setstudentID] : any = useState(sessionStorage.getItem('studentID') || "");
+    const [ID, setID] = useState(sessionStorage.getItem('userId') || "");
+    const [job, setjob] = useState(sessionStorage.getItem('job') || "");
+
     const [grade, setGrade] = useState("");
     const [classNum, setClassnum] = useState("");
     const [PostData, setPostData] = useState([])
@@ -151,7 +152,7 @@ const Home = () => {
                 };
         
             fetchTimetable();
-        }, [grade, classNum]);
+        },[]);
         
 
 
@@ -539,6 +540,7 @@ const _List = styled.li`
 
 const Statuswrap = styled.ul`
 width: 130px;
+z-index: -1;
 `;
 
 const Dot = styled.span`

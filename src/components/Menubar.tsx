@@ -154,6 +154,7 @@ export default Menubar;
     padding: 10px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 2;
     `;
     
     const Logo = styled.img`

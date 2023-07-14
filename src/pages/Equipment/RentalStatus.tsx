@@ -131,6 +131,7 @@ const _List = styled.li`
 
 const Statuswrap = styled.ul`
 width: 130px;
+z-index: -1;
 `;
 
 const Dot = styled.span`
