@@ -12,35 +12,38 @@ const Community = () => {
 
     const params = {
         page: 1,
-        limit: 5,
+        limit: 10,
     }
     
-    const handle = async() => {
-        await axiosInstance.get('/Community/postInquiry', { params })
-            .then(async (res) => {
-                if (res.status === 200) {
-                    console.log(res.data.data)
-                    setPostData(res.data.data)
-                } else if (res.status === 400) {
-                    alert("코드 400")
-                } else if (res.status === 500) {
-                    alert("코드 500")
-                }
-            }).catch((error) => {
-                console.log(error)
-            })
+    const handle = async () => {
+        try {
+            const response = await axiosInstance.get('/Community/postInquiry', {
+                params,
+            });
+
+            if (response.status === 200) {
+                console.log(response.data.data)
+                setPostData(response.data.data)
+            } else if (response.status === 400) {
+                alert("코드 400")
+            } else if (response.status === 500) {
+                alert("코드 500")
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
         handle()
-    }, [])
+    },[])
 
     return (
         <>
         <Menubar/>
             <_GlobalWrap>
             <_BoardListWrap>
-                <_BoardTitle>커뮤니티</_BoardTitle>
+                <_BoardTitle>커뮤니티</_BoardTitle><button onClick={()=>navigate('/communitywrite')}>글 작성</button>
                 <_BoardList>
                     <_ListHead>
                         <_Title>제목</_Title>
@@ -50,14 +53,6 @@ const Community = () => {
                         <_Likes>좋아요</_Likes>
                     </_ListHead>
                     <_ListBody>
-                        {/* <_Item>
-                            <_Num>1</_Num>
-                            <_Title>오늘의 일기</_Title>
-                            <_Name>박상규</_Name>
-                            <_Time>2024.02.02</_Time>
-                            <_Views>0</_Views>
-                            <_Likes>0</_Likes>
-                        </_Item> */}
                         <>
                         {PostData.map((item: any, i: any) => (
                             <_Item className='list-item' key={item.id}>
@@ -68,14 +63,12 @@ const Community = () => {
                                 </_Title>
                                 <_Name>{item.author}</_Name>
                                 <_Time>{item.date.substring(0, 11).replace(/-/g, '.').replace(/T/g, ' ')}</_Time>
-                                {/* <_Time>2024.02.02</_Time> */}
                                 <_Views>{item.views}</_Views>
                                 <_Likes>{item.likes}</_Likes>
                             </_Item>
                         ))}
                         </>
                     </_ListBody>
-                    {/* <_WriteBtn onClick={()=>navigate('/communitywrite')}>글 작성</_WriteBtn> */}
                 </_BoardList>
             </_BoardListWrap>
         </_GlobalWrap>

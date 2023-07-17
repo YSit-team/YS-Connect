@@ -23,6 +23,7 @@ import RentalRoom_T from './pages/Booth/RentalRoom_T'
 import RoomDetail from './pages/Booth/RoomDetail'
 import Profile from './pages/Account/Profile'
 import EditProfile from './pages/Account/EditProfile';
+import CommunityEdit from './pages/Community/CommunityEdit';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -46,6 +47,7 @@ function App() {
       <Route path="/community" element={<Community />} />
       <Route path="/communitywrite" element={<CommunityWrite />} />
       <Route path="/CommunityDetail/:id" element={<CommunityDetail/>} />
+      <Route path="/CommunityEdit/:id" element={<CommunityEdit/>} />
       <Route path="/Room_S" element={<RentalRoom_S />} />
       <Route path="/Room_T" element={<RentalRoom_T />} />
       <Route path="/roomdetail/:id" element={<RoomDetail/>} />

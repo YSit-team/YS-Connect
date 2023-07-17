@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
+import axios from 'axios';
 import Menubar from '../../components/Menubar';
 import { useParams } from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
