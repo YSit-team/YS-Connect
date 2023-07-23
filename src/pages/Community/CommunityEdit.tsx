@@ -1,544 +1,216 @@
 import React, { useEffect, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import axios from 'axios';
-import Menubar from '../../components/Menubar';
-import { useParams } from 'react-router-dom';
-import {useNavigate} from "react-router-dom";
+import styled from 'styled-components';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../api/API_Server';
+import Menubar from '../../components/Menubar';
 
-interface PostData {
-title: string;
-content: string;
-author: string;
-author_id: string;
-date: string;
-likes: number;
-views: number;
-}
+const CommunityWrite: React.FC = () => {
+    const { id } = useParams();
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [category, setCategory] = useState('');
+    const [file, setFile] = useState<File | null>(null);
+    const [postsData, setPostsData] = useState<any>([]);
+    const [userID, setUserID] = useState<string | null>(null);
 
-interface CommentData {
-account_id: string | null;
-id: string;
-author: string;
-content: string;
-date: string;
-}
-
-interface ReplyData {
-reply_id: string;
-account_id: string | null;
-id: string;
-comment_id: string;
-author: string;
-content: string;
-date: string;
-}
-
-const CommunityDetail = () => {
-let navigate = useNavigate();
-const { id } = useParams();
-
-const [postsData, setPostsData] = useState<PostData | null>(null);
-
-const [commentsData, setCommentsData] = useState<CommentData[]>([]);
-const [repliesData, setRepliesData] = useState<ReplyData[]>([]);
-
-const [userID, setUserID] = useState<string | null>(null);
-const [commentForm, setCommentForm] = useState('');
-const [replyForm, setReplyForm] = useState('');
-const [replyTarget, setReplyTarget] = useState('');
-
-useEffect(() => {
-    // 'userId'가 sessionStorage에 존재하는지 확인
-    const storedUserID = sessionStorage.getItem('userId');
-    if (storedUserID) {
-      setUserID(storedUserID); // sessionStorage에 값이 있으면 userID 상태를 설정합니다.
-    }
-}, []);
-
-const params = {
-    postID: id,
-};
-
-const handle = async (): Promise<void> => {
-    try {
-    const res = await axiosInstance.get('/Community/postInquiry', { params });
-    if (res.status === 200) {
-        if (res.data) {
-        setPostsData(res.data.results[0]);
+    useEffect(() => {
+        // 'userId'가 sessionStorage에 존재하는지 확인
+        const storedUserID = sessionStorage.getItem('userId');
+        if (storedUserID) {
+          setUserID(storedUserID); // sessionStorage에 값이 있으면 userID 상태를 설정합니다.
         }
-    } else if (res.status === 400) {
-        alert('코드 400');
-    } else if (res.status === 500) {
-        alert('코드 500');
-    } else {
-        alert('예외발생');
-    }
-    } catch (error) {
-    console.log(error);
-    }
-};
+    }, []);
 
-const commentCheck = async () => {
-    try {
-    const res = await axiosInstance.post('/Community/commentCheck', { postID: id });
-    setCommentsData(res.data.data);
-    console.log(commentsData)
-    } catch (error) {
-    console.log(error);
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
+    };
+
+    const handleContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(event.target.value);
+    };
+
+    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategory(event.target.value);
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+        setFile(event.target.files[0]);
     }
-};
+    };
 
-const repliesCheck = async () => {
-    try {
-    const res = await axiosInstance.post('/Community/repliesCheck', { postID: id });
-    setRepliesData(res.data.data);
-    console.log(repliesData)
-    } catch (error) {
-    console.log(error);
-    }
-};
-
-const handleCommentForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommentForm(e.target.value);
-};
-
-const handleReplyForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReplyForm(e.target.value);
-};
-
-const postComment = async () => {
-    try {
-        await axiosInstance.post('/Community/commentForm', { accountID: userID, postID: id, content: commentForm });
-        commentCheck();
-        setCommentForm('');
-    } catch (error) {
-    console.log(error);
-    }
-};
-
-const postReply = async (commentID: string) => {
-    try {
-        await axiosInstance.post('/Community/repliesForm', { accountID: userID, commentID, postID: id, content: replyForm });
-
-        repliesCheck();
-        setReplyForm('');
-        setReplyTarget('');
-    } catch (error) {
-    console.log(error);
-    }
-};
-
-const handleCommentKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.nativeEvent.isComposing) { 	   // isComposing 이 true 이면 
-        return;				   // 조합 중이므로 동작을 막는다.
-    }
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        postComment();
-    }
-};
-
-const handleReplyKeyPress = (event: React.KeyboardEvent<HTMLInputElement>, commentID: string) => {
-    if (event.nativeEvent.isComposing) { 	   // isComposing 이 true 이면 
-        return;				   // 조합 중이므로 동작을 막는다.
-    }
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        postReply(commentID);
-    }
-};
-
-const handleDelete = async() => {
-    console.log(id);
-    console.log(userID);
-    try {
-        const res = await axiosInstance.post('/Community/deletePost', { postID: id, accountID: userID });
-            alert("게시글이 삭제되었습니다.")
-            navigate('/community');
+    const params = { // 게시글 조회요청용 변수생성
+        postID: id,
+    };
+    
+    const handle = async (): Promise<void> => { // 게시글 조회
+        try {
+        const res = await axiosInstance.get('/Community/postInquiry', { params });
+        if (res.status === 200) {
+            if (res.data) {
+            setPostsData(res.data.results[0]);
+            setTitle(res.data.results[0].title);
+            setContent(res.data.results[0].content);
+            }
+        } else if (res.status === 400) {
+            alert('코드 400');
+        } else if (res.status === 500) {
+            alert('코드 500');
+        } else {
+            alert('예외발생');
+        }
         } catch (error) {
-            alert(userID)
         console.log(error);
-    }
-};
+        }
+    };
 
-const handleCommentDelete = async(commentId:any) => {
-    console.log(commentId);
-    console.log(id);
-    console.log(userID);
-    try {
-        const res = await axiosInstance.post('/Community/deleteComments', { commentID: commentId, postID: id, accountID: userID });
-            alert("댓글이 삭제되었습니다.")
-            window.location.reload();
+    const handleSubmit = async () => {
+        try {
+        const response = await axiosInstance.post('/Community/editPost', {
+            postID: id,
+            authorID: userID,
+            title: title,
+            content: content,
+        });
+    
+        if (response.status === 200) {
+            alert('성공' + response.data.message + "200");
+        } else if (response.status === 202) {
+            alert('에러' + response.data.message + "202");
+        } else if (response.status === 500) {
+            alert('에러' + '서버에 오류가 발생했습니다.' + "500");
+        }
         } catch (error) {
-            alert(userID)
-            console.log(error);
-    }
-};
+        console.log('Profile API | ', error);
+            alert('에러' + error);
+        }
+    
+        // 글 작성 폼이 제출되었을 때의 동작을 수행하는 함수입니다.
+        // 여기서는 단순히 title, content, category, file을 출력하는 예시를 보여줍니다.
+        console.log('Title:', title);
+        console.log('Content:', content);
+    };
 
-const handleReplyDelete = async(replyId:any, commentId:any) => {
-    console.log(replyId, commentId);
-    try {
-        const res = await axiosInstance.post('/Community/deleteReplies', { repliesID: replyId, commentID: commentId, postID: id, accountID: userID });
-            alert("대댓글이 삭제되었습니다.")
-            window.location.reload();
-    } catch (error) {
-        alert(userID)
-        console.log(error);
-}
-};
+    useEffect(() => {
+        handle();
+    }, [id]);
 
+    return (
+        <>
+        <Menubar/>
+        <Wrap>
+            <Container>
+            <_BoardTitle>커뮤니티 수정</_BoardTitle>
 
-useEffect(() => {
-    handle();
-}, [id]);
+            {/* <CategorySelect value={category} onChange={handleCategoryChange}>
+            <option value="">게시판을 선택해주세요</option>
+            <option value="technology">기술</option>
+            <option value="travel">여행</option>
+            <option value="food">음식</option>
+            </CategorySelect> */}
 
-useEffect(() => {
-    commentCheck();
-}, [id, commentForm]);
-
-useEffect(() => {
-    repliesCheck();
-}, [id, replyForm]);
-
-if (postsData === null) {
-    return <div>로딩중...</div>;
-}
-
-return (
-    <>
-    <Menubar />
-    <Wrapper>
-        <Title>{postsData.title}</Title>
-        <InfoWrapper>
-        <Profilewrap>
-            <Author>{postsData.author}</Author>
-            <Author style={{ paddingLeft: '5px', paddingRight: '5px' }}>|</Author>
-            <Time>{postsData.date.substring(0, 16).replace(/-/g, '.').replace(/T/g, ' ')}</Time>
-        </Profilewrap>
-        <StatsWrapper>
-            {postsData.author_id === userID ? (
-                <>
-                <button onClick={() => navigate(`/communityedit/${id}`)}>수정</button>
-                <button onClick={handleDelete}>삭제</button>
-                <Stat>조회수 {postsData.views}</Stat>
-                <Stat>좋아요 {postsData.likes}</Stat>
-                </>
-            ) : (
-                <>
-                <Stat>조회수 {postsData.views}</Stat>
-                <Stat>좋아요 {postsData.likes}</Stat>
-                </>
-            )}
-        </StatsWrapper>
-        </InfoWrapper>
-        <Content>{postsData.content}</Content>
-        <CommentWrapper>
-        <CommentInputWrapper>
-            <CommentAvatar src="/profile.jpeg" alt="Avatar" />
-            <_Inputwrapper2>
-            <CommentInput
+            <TitleInput
             type="text"
-            placeholder="댓글을 입력하세요"
-            value={commentForm}
-            onChange={handleCommentForm}
-            onKeyDown={handleCommentKeyPress}
+            placeholder="제목을 입력해주세요."
+            value={title}
+            onChange={handleTitleChange}
             />
-            <Underline />
-            </_Inputwrapper2>
-            <CommentButton onClick={postComment}>작성</CommentButton>
-        </CommentInputWrapper>
-
-        {commentsData.map((comment) => (
-            <CommentItem key={comment.id}>
-            <CommentContentWrap>
-                <CommentWriter>{comment.author}</CommentWriter>
-                <CommentContent>{comment.content}</CommentContent>
-                <CommentWriter>
-                {comment.account_id === userID ? (
-                <>
-                    <button onClick={() => handleCommentDelete(comment.id)}>삭제</button>
-                    <button
-                    style={{ marginRight: '20px' }}
-                    onClick={() => setReplyTarget(comment.id)}
-                    >
-                        답글쓰기
-                    </button>
-                </>
-            ) : (
-                <>
-                <button
-                    style={{ marginRight: '20px' }}
-                    onClick={() => setReplyTarget(comment.id)}
-                >
-                    답글쓰기
-                </button>
-                </>
-            )}
-                {comment.date.substring(5, 16).replace(/-/g, '.').replace(/T/g, ' ')}
-                </CommentWriter>
-            </CommentContentWrap>
-
-            {replyTarget === comment.id && (
-                <ReplyInputWrapper>
-                <ReplyAvatar src="/profile.jpeg" alt="Avatar" />
-                <ReplyInput
-                    type="text"
-                    placeholder="답글을 입력하세요"
-                    value={replyForm}
-                    onChange={handleReplyForm}
-                    onKeyDown={(event) => handleReplyKeyPress(event, comment.id)}
-                />
-                <ReplyUnderline />
-                <ReplyButton onClick={() => postReply(comment.id)}>작성</ReplyButton>
-                </ReplyInputWrapper>
-            )}
-
-            {repliesData
-                .filter((reply) => reply.comment_id === comment.id)
-                .map((reply) => (
-                <ReplyWrapper key={reply.id}>
-                    <ReplyItem>
-                    <CommentWriter>{reply.author}</CommentWriter>
-                    <ReplyContent>{reply.content}</ReplyContent>
-                    
-                    {reply.account_id === userID ? (
-                <>
-                    <ReplyContent><button onClick={() => handleReplyDelete(reply.reply_id, comment.id)}>삭제</button> {reply.date.substring(5, 16).replace(/-/g, '.').replace(/T/g, ' ')}</ReplyContent>
-                </>
-            ) : (
-                <>
-                    <ReplyContent>{reply.date.substring(5, 16).replace(/-/g, '.').replace(/T/g, ' ')}</ReplyContent>
-                </>
-            )}
-                    </ReplyItem>
-                </ReplyWrapper>
-                ))}
-
+            <ContentTextarea
+            placeholder="내용을 입력해주세요."
+            value={content}
+            onChange={handleContentChange}
+            />
             
-            </CommentItem>
-        ))}
-        </CommentWrapper>
-    </Wrapper>
+            {/* <FileInput type="file" onChange={handleFileChange} /> */}
+
+            <ButtonWrapper>
+            <SubmitButton onClick={handleSubmit}>글 작성</SubmitButton>
+            </ButtonWrapper>
+            </Container>
+        </Wrap>
     </>
-);
+    );
 };
 
-export default CommunityDetail;
 
+export default CommunityWrite;
 
-const Wrapper = styled.div`
-width: 100%;
-margin: 0 auto;
-padding: 20px;
-background-color: #fff;
-border: 1px solid #b1b1b1;
-margin-top: 100px;
-
-@media (max-width: 600px) {
+const Wrap = styled.div`
     width: 100vw;
-}
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
-const Title = styled.h2`
-font-size: 28px;
-font-weight: bold;
-`;
-
-const Author = styled.p`
-font-size: 14px;
-color: #888;
-margin-bottom: 10px;
-`;
-
-
-const InfoWrapper = styled.div`
+const Container = styled.div`
 display: flex;
-align-items: center;
-justify-content: space-between;
-border-bottom: 1px solid #000;
+flex-direction: column;
+width: 900px;
+
+border: 1px solid #ccc;
+border-radius: 8px;
+`;
+
+const _BoardTitle = styled.div`
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+    padding: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+`
+
+const CategorySelect = styled.select`
+font-size: 18px;
+padding: 8px;
 margin-bottom: 20px;
 `;
 
-const Profilewrap = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+const TitleInput = styled.input`
+font-size: 25px;
+margin-bottom: 20px;
+padding: 10px;
+font-weight: 600;
+border: none;
+outline: none;
+`;
+
+const ContentTextarea = styled.textarea`
+font-size: 18px;
+height: 300px;
+padding: 10px;
+resize: none; //크기조절 불가
+border: none;
+outline: none;
+
+`;
+
+const FileInput = styled.input`
+    margin-bottom: 20px;
+`;
+
+const ButtonWrapper = styled.div`
+display: flex;
+justify-content: flex-end;
+margin-bottom: 20px;
+
+border-top: 1px solid #ccc;
 `
 
-const Time = styled.p`
-font-size: 14px;
-color: #888;
-`;
-
-const StatsWrapper = styled.div`
+const SubmitButton = styled.button`
+width: 100px;
+height: 40px;
+font-weight: 600;
+margin-top: 20px;
+margin-right: 15px;
 display: flex;
 align-items: center;
-`;
-
-const Stat = styled.p`
-font-size: 14px;
-color: #888;
-margin-left: 10px;
-`;
-
-const Content = styled.div`
 font-size: 16px;
-line-height: 1.6;
-margin-bottom: 30px;
-`;
-
-const CommentWrapper = styled.div`
-margin-top: 30px;
-`;
-
-const CommentInputWrapper = styled.div`
-display: flex;
-align-items: center;
-margin-bottom: 10px;
-justify-content: center;
-position: relative;
-`;
-
-const CommentAvatar = styled.img`
-width: 32px;
-height: 32px;
-border-radius: 50%;
-margin-right: 10px;
-`;
-
-const _Inputwrapper2 = styled.div`
-width: 88%;
-position: relative;
-`;
-
-const CommentInput = styled.input`
-flex: 1;
-height: 32px;
-padding: 6px 10px;
-border: none;
-font-size: 14px;
-outline: none;
-`;
-
-const Underline = styled.div`
-position: absolute;
-bottom: 0;
-width: 100%;
-height: 1.5px;
-background-color: #1e00d3;
-transform-origin: center;
-transform: scaleX(0);
-transition: transform 0.3s;
-
-${CommentInput}:focus ~ & {
-    transform: scaleX(1);
-}
-`;
-
-
-
-const CommentButton = styled.button`
-padding: 6px 12px;
-border-radius: 16px;
-background-color: #3366ff;
+background-color: #007bff;
 color: #fff;
-font-size: 14px;
-font-weight: bold;
+padding: 12px 24px;
+border: none;
+border-radius: 4px;
 cursor: pointer;
-border: none;
-`;
-
-const CommentItem = styled.div`
-margin-top: 10px;
-padding-left: 42px;
-`;
-
-const CommentContent = styled.p`
-font-size: 14px;
-line-height: 1.4;
-`;
-
-const CommentContentWrap = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    border-bottom: 1px solid #888;
-    align-items: center;
-`
-
-const CommentWriter = styled.div`
-    font-size: 14px;
-    line-height: 1.4;
-`
-
-const ReplyWrapper = styled.div`
-margin-left: 32px;
-`;
-
-const ReplyItem = styled.div`
-margin-top: 10px;
-padding-left: 42px;
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-border-bottom: 1px solid #888;
-align-items: center;
-`;
-
-const ReplyContent = styled.p`
-font-size: 14px;
-line-height: 1.4;
-`;
-
-//답글쓰기
-const ReplyInputWrapper = styled.div`
-display: flex;
-align-items: center;
-margin-bottom: 10px;
-justify-content: center;
-position: relative;
-height: 50px;
-`;
-
-const ReplyAvatar = styled.img`
-width: 32px;
-height: 32px;
-border-radius: 50%;
-margin-right: 10px;
-`;
-
-const ReplyInput = styled.input`
-flex: 1;
-height: 32px;
-padding: 6px 10px;
-border: none;
-font-size: 14px;
-outline: none;
-`;
-
-const ReplyButton = styled.button`
-padding: 6px 12px;
-border-radius: 16px;
-background-color: #3366ff;
-color: #fff;
-font-size: 14px;
-font-weight: bold;
-cursor: pointer;
-border: none;
-`;
-
-const ReplyUnderline = styled.div`
-position: absolute;
-bottom: 0;
-width: 88%;
-height: 1.5px;
-background-color: #1e00d3;
-transform-origin: center;
-transform: scaleX(0);
-transition: transform 0.3s;
-
-${ReplyInput}:focus ~ & {
-    transform: scaleX(1);
-}
 `;

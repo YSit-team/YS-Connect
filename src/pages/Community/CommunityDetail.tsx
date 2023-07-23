@@ -55,11 +55,11 @@ useEffect(() => {
     }
 }, []);
 
-const params = {
+const params = { // 게시글 조회요청용 변수생성
     postID: id,
 };
 
-const handle = async (): Promise<void> => {
+const handle = async (): Promise<void> => { // 게시글 조회
     try {
     const res = await axiosInstance.get('/Community/postInquiry', { params });
     if (res.status === 200) {
@@ -78,7 +78,7 @@ const handle = async (): Promise<void> => {
     }
 };
 
-const commentCheck = async () => {
+const commentCheck = async () => { // 댓글 조회
     try {
     const res = await axiosInstance.post('/Community/commentCheck', { postID: id });
     setCommentsData(res.data.data);
@@ -88,7 +88,7 @@ const commentCheck = async () => {
     }
 };
 
-const repliesCheck = async () => {
+const repliesCheck = async () => { // 대댓글 조회
     try {
     const res = await axiosInstance.post('/Community/repliesCheck', { postID: id });
     setRepliesData(res.data.data);
@@ -98,15 +98,15 @@ const repliesCheck = async () => {
     }
 };
 
-const handleCommentForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleCommentForm = (e: React.ChangeEvent<HTMLInputElement>) => { // 댓글 작성 실시간반영
     setCommentForm(e.target.value);
 };
 
-const handleReplyForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleReplyForm = (e: React.ChangeEvent<HTMLInputElement>) => { // 대댓글 작성 실시간반영
     setReplyForm(e.target.value);
 };
 
-const postComment = async () => {
+const postComment = async () => { // 댓글작성
     try {
         await axiosInstance.post('/Community/commentForm', { accountID: userID, postID: id, content: commentForm });
         commentCheck();
@@ -116,7 +116,7 @@ const postComment = async () => {
     }
 };
 
-const postReply = async (commentID: string) => {
+const postReply = async (commentID: string) => { // 대댓글작성
     try {
         await axiosInstance.post('/Community/repliesForm', { accountID: userID, commentID, postID: id, content: replyForm });
 
@@ -128,7 +128,7 @@ const postReply = async (commentID: string) => {
     }
 };
 
-const handleCommentKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+const handleCommentKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => { // 댓글 엔터키
     if (event.nativeEvent.isComposing) { 	   // isComposing 이 true 이면 
         return;				   // 조합 중이므로 동작을 막는다.
     }
@@ -138,7 +138,7 @@ const handleCommentKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => 
     }
 };
 
-const handleReplyKeyPress = (event: React.KeyboardEvent<HTMLInputElement>, commentID: string) => {
+const handleReplyKeyPress = (event: React.KeyboardEvent<HTMLInputElement>, commentID: string) => { // 대댓글 엔터키
     if (event.nativeEvent.isComposing) { 	   // isComposing 이 true 이면 
         return;				   // 조합 중이므로 동작을 막는다.
     }
@@ -161,7 +161,7 @@ const handleDelete = async() => {
     }
 };
 
-const handleCommentDelete = async(commentId:any) => {
+const handleCommentDelete = async(commentId:any) => { // 댓글 삭제
     console.log(commentId);
     console.log(id);
     console.log(userID);
@@ -175,7 +175,7 @@ const handleCommentDelete = async(commentId:any) => {
     }
 };
 
-const handleReplyDelete = async(replyId:any, commentId:any) => {
+const handleReplyDelete = async(replyId:any, commentId:any) => { // 대댓글 삭제
     console.log(replyId, commentId);
     try {
         const res = await axiosInstance.post('/Community/deleteReplies', { repliesID: replyId, commentID: commentId, postID: id, accountID: userID });
@@ -281,6 +281,7 @@ return (
             {replyTarget === comment.id && (
                 <ReplyInputWrapper>
                 <ReplyAvatar src="/profile.jpeg" alt="Avatar" />
+                <_Inputwrapper2>
                 <ReplyInput
                     type="text"
                     placeholder="답글을 입력하세요"
@@ -289,6 +290,7 @@ return (
                     onKeyDown={(event) => handleReplyKeyPress(event, comment.id)}
                 />
                 <ReplyUnderline />
+                </_Inputwrapper2>
                 <ReplyButton onClick={() => postReply(comment.id)}>작성</ReplyButton>
                 </ReplyInputWrapper>
             )}
@@ -413,6 +415,7 @@ position: relative;
 
 const CommentInput = styled.input`
 flex: 1;
+width: 100%;
 height: 32px;
 padding: 6px 10px;
 border: none;
@@ -444,6 +447,7 @@ background-color: #3366ff;
 color: #fff;
 font-size: 14px;
 font-weight: bold;
+z-index: 2;
 cursor: pointer;
 border: none;
 `;
@@ -509,6 +513,7 @@ margin-right: 10px;
 
 const ReplyInput = styled.input`
 flex: 1;
+width: 100%;
 height: 32px;
 padding: 6px 10px;
 border: none;
@@ -524,13 +529,14 @@ color: #fff;
 font-size: 14px;
 font-weight: bold;
 cursor: pointer;
+z-index: 2;
 border: none;
 `;
 
 const ReplyUnderline = styled.div`
 position: absolute;
 bottom: 0;
-width: 88%;
+width: 100%;
 height: 1.5px;
 background-color: #1e00d3;
 transform-origin: center;
