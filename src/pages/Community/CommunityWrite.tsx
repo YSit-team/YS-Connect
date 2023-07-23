@@ -10,6 +10,7 @@ const CommunityWrite: React.FC = () => {
     const [category, setCategory] = useState('');
     const [file, setFile] = useState<File | null>(null);
     const [userID, setUserID] = useState<string | null>(null);
+    const [name, setName] = useState<string | null>(sessionStorage.getItem('name'));
 
     useEffect(() => {
         // 'userId'가 sessionStorage에 존재하는지 확인
@@ -39,9 +40,9 @@ const CommunityWrite: React.FC = () => {
 
     const handleSubmit = async () => {
         try {
-        const response = await axiosInstance.post('/Community/postskrite', {
+        const response = await axiosInstance.post('/Community/postWrite', {
             id: userID,
-            name: sessionStorage.getItem('name'),
+            name: name,
             title: title,
             content: content,
         });
@@ -60,6 +61,8 @@ const CommunityWrite: React.FC = () => {
     
         // 글 작성 폼이 제출되었을 때의 동작을 수행하는 함수입니다.
         // 여기서는 단순히 title, content, category, file을 출력하는 예시를 보여줍니다.
+        console.log('유저아이디:', userID)
+        console.log('이름:', name);
         console.log('Title:', title);
         console.log('Content:', content);
     };

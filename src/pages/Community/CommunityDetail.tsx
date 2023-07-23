@@ -329,7 +329,7 @@ export default CommunityDetail;
 
 
 const Wrapper = styled.div`
-width: 100%;
+width: 80%;
 margin: 0 auto;
 padding: 20px;
 background-color: #fff;
@@ -337,7 +337,9 @@ border: 1px solid #b1b1b1;
 margin-top: 100px;
 
 @media (max-width: 600px) {
-    width: 100vw;
+    width: 90vw;
+    border: none;
+    margin-top: 50px;
 }
 `;
 
@@ -350,6 +352,7 @@ const Author = styled.p`
 font-size: 14px;
 color: #888;
 margin-bottom: 10px;
+white-space: nowrap;
 `;
 
 
@@ -370,6 +373,7 @@ const Profilewrap = styled.div`
 const Time = styled.p`
 font-size: 14px;
 color: #888;
+white-space: nowrap;
 `;
 
 const StatsWrapper = styled.div`
@@ -381,6 +385,11 @@ const Stat = styled.p`
 font-size: 14px;
 color: #888;
 margin-left: 10px;
+white-space: nowrap;
+
+@media (max-width: 600px) {
+    font-size: 12px;
+}
 `;
 
 const Content = styled.div`
@@ -427,7 +436,7 @@ const Underline = styled.div`
 position: absolute;
 bottom: 0;
 width: 100%;
-height: 1.5px;
+height: 1px;
 background-color: #1e00d3;
 transform-origin: center;
 transform: scaleX(0);
@@ -450,6 +459,11 @@ font-weight: bold;
 z-index: 2;
 cursor: pointer;
 border: none;
+white-space: nowrap; 
+
+@media (max-width: 600px) {
+    white-space: nowrap; 
+}
 `;
 
 const CommentItem = styled.div`
@@ -537,7 +551,7 @@ const ReplyUnderline = styled.div`
 position: absolute;
 bottom: 0;
 width: 100%;
-height: 1.5px;
+height: 1px;
 background-color: #1e00d3;
 transform-origin: center;
 transform: scaleX(0);
