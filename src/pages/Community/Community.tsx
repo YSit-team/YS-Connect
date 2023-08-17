@@ -50,7 +50,6 @@ const Community = () => {
         if ((i - 1) % 5 === 0) {
             btnpages[j] = []; // 새로운 배열을 초기화
         }
-        console.log('i 값은',i)
         btnpages[j].push(
         <a
             key={i}
@@ -132,7 +131,6 @@ const Community = () => {
                                 </_Title>
                                 <_Name>{data.author}</_Name>
                                 <_Time>{`${data.date.slice(0, 10)}`}</_Time>
-                                {/* <_Time>2024.02.02</_Time> */}
                                 <_Views>{data.views}</_Views>
                                 <_Likes>{data.likes}</_Likes>
                             </_Item>

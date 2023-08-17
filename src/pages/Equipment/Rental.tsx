@@ -445,9 +445,6 @@ const Label = styled.label`
         padding-bottom: 5px;
         margin-right: 55%;
     }
-    @media (max-width: 400px) {
-        margin-top: -4px;
-    }
 
 `;
 

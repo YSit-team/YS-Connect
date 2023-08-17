@@ -6,6 +6,8 @@ import {useNavigate} from "react-router-dom";
 import axiosInstance from '../../api/API_Server';
 
 interface PostData {
+image: any;
+image_Type: any;
 title: string;
 content: string;
 author: string;
@@ -16,6 +18,9 @@ views: number;
 }
 
 interface CommentData {
+image_Type: any;
+image: any;
+image_Path: string | undefined;
 account_id: string | null;
 id: string;
 author: string;
@@ -38,6 +43,8 @@ let navigate = useNavigate();
 const { id } = useParams();
 
 const [postsData, setPostsData] = useState<PostData | null>(null);
+const [postImgData, setPostImgData] = useState([]);
+const [postImgInfo, setPostImgInfo] = useState('');
 
 const [commentsData, setCommentsData] = useState<CommentData[]>([]);
 const [repliesData, setRepliesData] = useState<ReplyData[]>([]);
@@ -64,7 +71,10 @@ const handle = async (): Promise<void> => { // 게시글 조회
     const res = await axiosInstance.get('/Community/postInquiry', { params });
     if (res.status === 200) {
         if (res.data) {
-        setPostsData(res.data.results[0]);
+            console.log(res.data.data)
+            setPostsData(res.data.data[0]);
+            setPostImgData(res.data.data.imageData);
+            setPostImgInfo(res.data.data.imageInfo);
         }
     } else if (res.status === 400) {
         alert('코드 400');
@@ -80,9 +90,9 @@ const handle = async (): Promise<void> => { // 게시글 조회
 
 const commentCheck = async () => { // 댓글 조회
     try {
-    const res = await axiosInstance.post('/Community/commentCheck', { postID: id });
+    const res = await axiosInstance.post('/Community/commentsCheck', { postID: id });
     setCommentsData(res.data.data);
-    console.log(commentsData)
+    console.log(res.data.data);
     } catch (error) {
     console.log(error);
     }
@@ -231,7 +241,42 @@ return (
             )}
         </StatsWrapper>
         </InfoWrapper>
-        <Content>{postsData.content}</Content>
+        <Content>
+            
+            {/* 댓글만 존재 */}
+            {postsData.content != null && !postImgData &&
+                    <>
+                    {postsData.content}
+                    </>
+                }
+                {/* 이미지만 존재 */}
+                {postsData.content === null && postImgData && (
+                <>
+                    {postImgData.map((image, i) => (
+                        <img
+                        key={i} // 각 이미지마다 고유한 식별자를 지정
+                        src={`data:image/jpeg;base64,${image}`} // MIME 타입 지정 및 base64 데이터 사용
+                        alt={`Image ${i}`}
+                        style={{ maxWidth: '200px', width: '100%', height: 'auto' }}
+                        />
+                    ))}
+                </>
+                )}
+                {/* 댓글, 이미지 존재 */}
+                {postsData.content != null && postImgData &&
+                    <>
+                    {postsData.content}
+                    {postImgData.map((image, i) => (
+                        <img
+                        key={i} // 각 이미지마다 고유한 식별자를 지정
+                        src={`data:image/jpeg;base64,${image}`} // MIME 타입 지정 및 base64 데이터 사용
+                        alt={`Image ${i}`}
+                        style={{ maxWidth: '200px', width: '100%', height: 'auto' }}
+                        />
+                    ))}
+                    </>
+                }
+        </Content>
         <CommentWrapper>
         <CommentInputWrapper>
             <CommentAvatar src="/profile.jpeg" alt="Avatar" />
@@ -251,8 +296,28 @@ return (
         {commentsData.map((comment) => (
             <CommentItem key={comment.id}>
             <CommentContentWrap>
-                <CommentWriter>{comment.author}</CommentWriter>
-                <CommentContent>{comment.content}</CommentContent>
+                {/* 댓글만 존재 */}
+                {comment.content != null && !comment.image &&
+                    <>
+                    <CommentWriter>{comment.author}</CommentWriter>
+                    <CommentContent>{comment.content}</CommentContent>
+                    </>
+                }
+                {/* 이미지만 존재 */}
+                {comment.content === null && comment.image && (
+                <>
+                    <CommentWriter>{comment.author}</CommentWriter>
+                    <img src={`data:${""};base64,${comment.image}`} alt="Image"  style={{ maxWidth: '200px', width: '100%', height: 'auto' }}/>
+                </>
+                )}
+                {/* 댓글, 이미지 존재 */}
+                {comment.content != null && comment.image &&
+                    <>
+                    <CommentWriter>{comment.author}</CommentWriter>
+                    <img src={`data:${""};base64,${comment.image}`} alt="Image"  style={{ maxWidth: '200px', width: '100%', height: 'auto' }}/>
+                    <CommentContent>{comment.content}</CommentContent>
+                    </>
+                }
                 <CommentWriter>
                 {comment.account_id === userID ? (
                 <>
@@ -314,11 +379,13 @@ return (
             )}
                     </ReplyItem>
                 </ReplyWrapper>
+                
                 ))}
 
             
             </CommentItem>
         ))}
+        
         </CommentWrapper>
     </Wrapper>
     </>

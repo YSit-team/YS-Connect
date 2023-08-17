@@ -76,12 +76,12 @@ const Menubar = () => {
                             <ButtonText>프로필 수정</ButtonText>
                             </IconBtn_wrap>
 
-                            <IconBtn_wrap>
+                            {/* <IconBtn_wrap>
                             <IconButton>
                                 <Icon src='/moon.svg'></Icon>
                             </IconButton>
                             <ButtonText>다크모드</ButtonText>
-                            </IconBtn_wrap>
+                            </IconBtn_wrap> */}
 
                             <IconBtn_wrap>
                             <IconButton onClick={Logout}>
