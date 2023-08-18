@@ -24,6 +24,7 @@ import RoomDetail from './pages/Booth/RoomDetail'
 import Profile from './pages/Account/Profile'
 import EditProfile from './pages/Account/EditProfile';
 import CommunityEdit from './pages/Community/CommunityEdit';
+import GatherForm from "./pages/Account/Signup/GatherForm"
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -53,6 +54,8 @@ function App() {
       <Route path="/roomdetail/:id" element={<RoomDetail/>} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/edit" element={<EditProfile />} />
+      <Route path="/signup-form" element={<GatherForm/>} />
+      
     </Routes>
     </Router>
   );
