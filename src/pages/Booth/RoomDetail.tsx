@@ -5,19 +5,22 @@ import Menubar from '../../components/Menubar'
 import { useParams, useNavigate} from 'react-router-dom';
 import axiosInstance from '../../api/API_Server';
 
+
 const ListDetail = () => {
     let navigate = useNavigate();
     const { id } = useParams(); // get the product ID from the URL
     const [product, setProduct]:any = useState([]);
     const [Accept, setAccept] = useState(true);
     const [StudentID, setStudentID] = useState("");
-    const [ID, setID] = useState(sessionStorage.getItem('userId'));
+    const [Studentnumber, setStudentnumber] = useState(""); //학생 고유 아이디
+    const [TeacherID, setTeacherID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
 
     useEffect(()=>{
         axiosInstance.post("/RoomRental/RentalInquiry", {id}).then((response) => {
             console.log(response.data.data);
             setProduct(response.data.data);
+            setStudentnumber(response.data.data.id)
             setStudentID(response.data.id);
         })
         .catch((error) => console.log(error));
@@ -39,7 +42,6 @@ const ListDetail = () => {
             <_Wrap>
             <Menubar/>
             <_Header>{product.studentID} {product.first_name+product.last_name}님의 신청</_Header>
-            <_List>기자재 목록</_List>
             <_Write>신청서</_Write>
             <_Writewrap>
                 <_Inputtitle>이름 : {product.first_name+product.last_name}</_Inputtitle>
@@ -47,42 +49,68 @@ const ListDetail = () => {
                 <_Inputtitle>방음부스 : {product.room_number}</_Inputtitle>
                 <_Inputtitle>대여시간 : {product.start_time+"~"+product.end_time}</_Inputtitle>
                 <_Inputtitle>이용목적 : {product.purpose}</_Inputtitle>
+                <div>{job}</div>
             </_Writewrap>
             <Btnwrap>
                 <_SubmitBtn bgcolor="#01d705" color="#ffffff" 
                     onClick={()=>{
-                        setAccept(true)
-                        alert("수락되었습니다.")
-                        console.log(Accept)
-                        axiosInstance.post('EquipmentRental/AcceptorButton', {
-                            studentID: StudentID,
-                            teacherID: ID,
+                        axiosInstance.post('/RoomRental/AcceptorButton', {
+                            studentID: Studentnumber,
+                            teacherID: TeacherID,
                             buttonType:'accept',
-                            methodName:""
+                            methodName:"rentalForm"
                         })
-                        .then(response => {
-                            console.log(response.data.massage); 
+                        .then(res => {
+                            if (res.status == 200) {
+                                alert(res.data.massage);
+                                window.history.back(); // 이전 페이지로 이동
+                            } else {
+                                alert("예외 발생")
+                            }
                         })
                         .catch(error => {
-                            console.error(error);
+                            console.log(error);
+                            if (error.response) {
+                                const res = error.response;
+                                if(res.state === 400) {
+                                    alert(res.data.errorDescription)
+                                } else {
+                                    alert(res.data.errorDescription)
+                                }
+                            }else {
+                                alert("서버 통신 실패")
+                            }
                         });
                     }}>수락</_SubmitBtn>
                 <_SubmitBtn bgcolor="#f02a2b" color="#ffffff"
                     onClick={()=>{
                         setAccept(false)
-                        alert("거절되었습니다.")
-                        console.log(Accept)
-                        axiosInstance.post('EquipmentRental/AcceptorButton', {
-                            studentID: StudentID,
-                            teacherID: ID,
+                        axiosInstance.post('/RoomRental/AcceptorButton', {
+                            studentID: Studentnumber,
+                            teacherID: TeacherID,
                             buttonType:'decline',
-                            methodName:""
+                            methodName:"rentalReturn"
                         })
-                        .then(response => {
-                            console.log(response.data);
+                        .then(res => {
+                            if (res.status == 200) {
+                                alert(res.data.massage);
+                                window.history.back(); // 이전 페이지로 이동
+                            } else {
+                                alert("예외 발생")
+                            }
                         })
                         .catch(error => {
-                            console.error(error);
+                            console.log(error);
+                            if (error.response) {
+                                const res = error.response;
+                                if(res.state === 400) {
+                                    alert(res.data.errorDescription)
+                                } else {
+                                    alert(res.data.errorDescription)
+                                }
+                            }else {
+                                alert("서버 통신 실패")
+                            }
                         });
                     }}>거절</_SubmitBtn>
             </Btnwrap>

@@ -110,7 +110,7 @@ const Rental = () => {
                     purpose: purpose
                 }
                 )
-                axios.post("", {
+                axios.post("http://www.zena.co.kr/api/EquipmentRental/RentalForm", {
                     id: id,
                     studentID: studentID,
                     cart: cart,
@@ -138,20 +138,6 @@ const Rental = () => {
                     }
                 })
                 .catch(()=>{alert("실패")})
-                console.log({
-                    id: id,
-                    studentID: studentID,
-                    cart: cart,
-                    firstName: name.substring(0, 1),
-                    lastName: name.substring(1, 3),
-                    person: person,
-                    period1: period1,
-                    period2: period2,
-                    meet1: meet1,
-                    meet2: meet2,
-                    phonenum: phonenum,
-                    purpose: purpose
-                });
                 }}
                 >
             <_Header>신청하기</_Header>
@@ -388,10 +374,9 @@ const _Subtext = styled.div`
 
 
 //추가하기
-const _Addbtn = styled.button`
+const _Addbtn = styled.span`
     width: 100px;
     height: 35px;
-    border: none;
     border-radius: 5px;
     background-color: #1E00D3;
     color: white;
@@ -399,6 +384,11 @@ const _Addbtn = styled.button`
     font-size: 14px;
     font-weight: 900;
     margin-right: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     cursor: pointer;
 
     @media (max-width: 600px) {

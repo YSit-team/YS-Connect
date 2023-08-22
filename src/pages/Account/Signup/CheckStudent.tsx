@@ -15,84 +15,136 @@ type NextProps = {
 };
 
 const CheckStudent: React.FC<NextProps> = ({ formData, onNextStep }) => {
-const [image, setImage] = useState<File | null>(null);
-const [imageData, setImgData] = useState<{
-    uri: string;
-    type: string;
-    fileName: string;
-} | null>(null);
+    const [image, setImage] = useState<File | null>(null);
 
-const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const uploadedImage = event.target.files?.[0];
-    if (uploadedImage) {
-        setImage(uploadedImage);
-        setImgData({
-            uri: URL.createObjectURL(uploadedImage),
-            type: uploadedImage.type,
-            fileName: uploadedImage.name,
-        });
-    }
-};
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+    //const [imageData, setImgData] = useState<{
+    //     uri: string;
+    //     type: string;
+    //     fileName: string;
+    // } | null>(null);
 
-const handleCheckStudentIDForm = async () => {
-    if (!image) {
-    alert('먼저 사진을 촬영하거나 선택해주세요.');
-    return;
-    }
+    // const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const uploadedImage = event.target.files?.[0];
+    //     if (uploadedImage) {
+    //         setImage(uploadedImage);
+    //         setImgData({
+    //             uri: URL.createObjectURL(uploadedImage),
+    //             type: uploadedImage.type,
+    //             fileName: uploadedImage.name,
+    //         });
+    //     }
+    // };
 
-    try {
+    // const handleImageChange = (event:any) => {
+    //     const file = event.target.files?.[0];
+    //     console.log(file)
+    //     if (file) {
+    //         //setImage(URL.createObjectURL(file));
+    //         setImage(file)
+    //     }
+    // };
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
 
-    const form = new FormData()
-    // form.append('image', image);
-    const imageInfo = {
-        uri: URL.createObjectURL(image),
-        type: image.type,
-        name: image.name,
+            // 이미지 미리보기 생성
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPreviewImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
-    form.append('image', JSON.stringify(imageInfo));
-    form.append('data', JSON.stringify({
-        studentID: formData.studentID,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-    }))
+    const handleCheckStudentIDForm = async (event: React.FormEvent) => {
+        event.preventDefault();
 
-    console.log(form.get('image'))
-    console.log(form.get('data'));
+        // if (!image) {
+        //     alert('먼저 사진을 촬영하거나 선택해주세요.');
+        //     return;
+        // }
 
-    // REST API 호출 및 처리 로직
-    const response = await axiosInstance.post('/register/CheckStudentID', form);
+        if (!selectedFile) {
+            alert('먼저 사진을 선택해주세요.');
+            return;
+        }
+        try {
+            // form.append('image', image);
+            // const imageInfo = {
+            //     uri: (URL.createObjectURL(image)),
+            //     type: image.type,
+            //     name: image.name,
+            // };
 
-    // API 호출 성공 시의 처리 로직
-    if (response.status === 200) {
-        alert(response.data.message);
-    }
-    } catch (error) {
-    // API 호출 실패 또는 예외 발생 시의 처리 로직
-    alert('예외가 발생했습니다.\n나중에 다시 시도해 주세요.');
-    console.error(error);
-    }
-};
+            // Create FormDataEntryValue for the image
+            //const imageValue = new File([image], image.name, { type: image.type });
+            const imageData = {
+                uri: previewImage,
+                type: 'image/jpeg',
+                name: 'name.jpg',
+            }
+            const form = new FormData();
+            form.append('image', selectedFile);
 
-return (
-    <_Wrap>
-    <_FormWrap>
-        <_Subtitle>학생증을 확인할게요</_Subtitle>
+            form.append('data', JSON.stringify({
+                studentID: '30263',
+                firstName: '이',
+                lastName: '길동',
+            }));
 
-        <_InputWrap>
-        <_Input type="file" accept="image/*" onChange={handleImageUpload} />
-        </_InputWrap>
-        {image && <_Image src={URL.createObjectURL(image)} alt="학생증 사진" />}
+            //console.log(imageValue)
 
-        <_SignUpBtnWrap>
-        <_SignUpBtn type="button" onClick={handleCheckStudentIDForm}>
-            전송
-        </_SignUpBtn>
-        </_SignUpBtnWrap>
-    </_FormWrap>
-    </_Wrap>
-);
+            // REST API 호출 및 처리 로직
+            await axiosInstance.post('/register/CheckStudentID', form, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        alert(res.data.message)
+                    } else {
+                        alert('예외 발생')
+                    }
+                }).catch((error) => {
+                    console.log(error)
+                    if (error.response) {
+                        const res = error.response
+                        if (res.state === 400) {
+                            alert(res.data.errorDescription)
+                        } else {
+                            alert(res.data.errorDescription)
+                        }
+                    } else {
+                        alert('서버 통신 실패')
+                    }
+                })
+        } catch (error) {
+            // API 호출 실패 또는 예외 발생 시의 처리 로직
+            console.error(error);
+        }
+    };
+
+    return (
+        <_Wrap>
+            <_FormWrap>
+                <_Subtitle>학생증을 확인할게요</_Subtitle>
+
+                <_InputWrap>
+                    <_Input type="file" accept="image/*" onChange={handleFileChange} />
+                </_InputWrap>
+                {image && <_Image src={URL.createObjectURL(image)} alt="학생증 사진" />}
+
+                <_SignUpBtnWrap>
+                    <_SignUpBtn type="button" onClick={handleCheckStudentIDForm}>
+                        전송
+                    </_SignUpBtn>
+                </_SignUpBtnWrap>
+            </_FormWrap>
+        </_Wrap>
+    );
 };
 
 export default CheckStudent;
