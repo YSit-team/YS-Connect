@@ -6,6 +6,7 @@ import styled from "styled-components";
 type ProfileInputProps = {
     formData: {
         email: string;
+        accountID: string;
         password: string;
         phoneNumber: string;
         firstName: string,
@@ -31,6 +32,16 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                         readOnly
                         />
                     </_InputWrap>
+
+                    <_InputWrap>
+                        <_Label>아이디</_Label>
+                        <_Input
+                        value={formData.accountID}
+                        type="text"
+                        readOnly
+                        />
+                    </_InputWrap>
+
                     <_InputWrap>
                         <_Label>비밀번호</_Label>
                         <_Input

@@ -9,6 +9,7 @@ const RegistrationForm = () => {
 const [currentStep, setCurrentStep] = useState(1);
 const [formData, setFormData] = useState({
     email: "",
+    accountID:"",
     password: "",
     phoneNumber: "",
     firstName: "",

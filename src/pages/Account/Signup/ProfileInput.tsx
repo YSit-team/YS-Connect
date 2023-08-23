@@ -6,6 +6,7 @@ import styled from "styled-components";
 type ProfileInputProps = {
     formData: {
         email: string;
+        accountID: string;
         password: string;
         phoneNumber: string;
         firstName: string,
@@ -15,6 +16,7 @@ type ProfileInputProps = {
     setFormData: React.Dispatch<
         React.SetStateAction<{
             email: string;
+            accountID: string;
             password: string;
             phoneNumber: string;
             firstName: string,

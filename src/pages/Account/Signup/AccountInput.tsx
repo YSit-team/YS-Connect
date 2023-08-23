@@ -7,6 +7,7 @@ import axiosInstance from "../../../api/API_Server";
 type AccountInputProps = {
     formData: {
         email: string;
+        accountID: string;
         password: string;
         phoneNumber: string;
         firstName: string,
@@ -16,6 +17,7 @@ type AccountInputProps = {
     setFormData: React.Dispatch<
         React.SetStateAction<{
             email: string;
+            accountID: string;
             password: string;
             phoneNumber: string;
             firstName: string,
@@ -27,172 +29,199 @@ type AccountInputProps = {
 };
 
 
-const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNextStep })  => {
-const [checkpw, setCheckpw] = useState("");
-const [isInputVisible, setIsInputVisible] = useState(true);
-const [emailerr, setEmailerr] = useState('');
-const [pwerr, setPwerr] = useState('');
-const [checkpwerr, setCheckpwerr] = useState('');
-const [telerr, setTelerr] = useState('');
+const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNextStep }) => {
+    const [checkpw, setCheckpw] = useState("");
+    const [isInputVisible, setIsInputVisible] = useState(true);
+    const [emailerr, setEmailerr] = useState('');
+    const [pwerr, setPwerr] = useState('');
+    const [checkpwerr, setCheckpwerr] = useState('');
+    const [telerr, setTelerr] = useState('');
 
-let navigate = useNavigate();
+    let navigate = useNavigate();
 
-const handleEmBlur = async (event:any) => {
-    const email = event.target.value
-    if (!formData.email) {
-        setEmailerr('이메일을 입력해주세요.');
-    } else if (!formData.email.includes('@')) {
-        setEmailerr('이메일 형식이 올바르지 않습니다.');
-    } else {
-        // try {
-        //     setEmailerr("중복검사중입니다.."); // 중복검사 중임을 표시
-        //     const response = await axiosInstance.post("/api/register", {
-        //         email
-        //     });
-    
-        //     const { status, data } = response;
-        //     setEmailerr(data.message);
-        // } catch (error) {
-        //     console.error(error);
-        //     alert("서버 연결 불가");
-        // } finally {
-        //     setEmailerr(""); // 중복검사 완료
-        // }
-    }
-};
+    const handleEmBlur = (event: any) => {
+        const email = event.target.value;
 
-const handlePwBlur = () => {
-    if (!formData.password) {
-        setPwerr('비밀번호를 입력해주세요.');
-    } else if (formData.password.length < 8 || !/\d/.test(formData.password) || !/[!@#$%^&*]/.test(formData.password)) {
-        setPwerr('최소 8자 이상, 숫자와 특수문자를 포함해야 합니다.');
-    } else {
-        setPwerr('');
-    }
-};
+        try {
+            setEmailerr("중복검사중입니다.."); // 중복검사 중임을 표시
+            setTimeout(() => {
+                axiosInstance.post("/register", {
+                    email
+                }).then((res) => {
+                    if (res.status === 200) {
+                        setEmailerr('');
+                    } else {
+                        setEmailerr('예외 발생');
+                    }
+                }).catch((error) => {
+                    console.log(error);
 
-const handleTelBlur = () => {
-    if (!formData.phoneNumber) {
-        setTelerr('전화번호를 입력해주세요.');
-    }else if (formData.phoneNumber.length < 13) {
-        setTelerr('전화번호 형식이 잘못되었습니다.')
-    }else {
-        setTelerr('');
-    }
-};
-
-const handleCheckPwBlur = () => {
-    if (!checkpw) {
-        setCheckpwerr('비밀번호를 다시 입력해주세요.');
-    } else if (formData.password !== checkpw) {
-        setCheckpwerr('비밀번호가 일치하지 않습니다.');
-    } else {
-        setCheckpwerr('');
-    }
-};
-
-const handleFormSubmit = () => {
-    if (
-        formData.email.includes('@') &&
-        formData.password.length >= 8 && /\d/.test(formData.password) && /[!@#$%^&*]/.test(formData.password) &&
-        formData.password === checkpw &&
-        formData.phoneNumber.length >= 11
-    ) {
-        // 성공적인 제출 이후에 다음 페이지로 이동
-        onNextStep();
-    } else {
-        alert('모든 필드를 올바르게 작성해주세요.');
-    }
-};
-
-const handleCheckPw = (event: any) => {
-    setCheckpw(event.target.value);
-};
-
-const handleEmChange = (event: any) => {
-    setFormData((prevData) => ({
-        ...prevData,
-        email: event.target.value,
-    }));
-};
-
-const handlePwChange = (event: any) => {
-    setFormData((prevData) => ({
-        ...prevData,
-        password: event.target.value,
-    }));
-};
-
-const handleTelChange = (event:any) => {
-    // Remove any existing dashes from the input value
-    const cleanedValue = event.target.value.replace(/-/g, '');
-
-    // Add dashes at appropriate positions
-    let formattedValue = '';
-    for (let i = 0; i < cleanedValue.length; i++) {
-        if (i === 3 || i === 7) {
-            formattedValue += '-';
+                    if (error.response) {
+                        const res = error.response;
+                        if (res.state === 400) {
+                            setEmailerr(res.data.errorDescription);
+                        } else {
+                            setEmailerr(res.data.errorDescription);
+                        }
+                    } else {
+                        alert('서버 통신 실패');
+                    }
+                });
+            }, 1000)
+        } catch (error) {
+            console.log(error);
         }
-        formattedValue += cleanedValue[i];
-    }
+    };
 
-    setFormData((prevData) => ({
-        ...prevData,
-        phoneNumber: formattedValue,
-    }));
-};
+    const handlePwBlur = () => {
+        if (!formData.password) {
+            setPwerr('비밀번호를 입력해주세요.');
+        } else if (formData.password.length < 8 || !/\d/.test(formData.password) || !/[!@#$%^&*]/.test(formData.password)) {
+            setPwerr('최소 8자 이상, 숫자와 특수문자를 포함해야 합니다.');
+        } else {
+            setPwerr('');
+        }
+    };
 
-const [passwordType,setPasswordType] = useState({
-    type:'password',
-    visible:false
-})
+    const handleTelBlur = () => {
+        if (!formData.phoneNumber) {
+            setTelerr('전화번호를 입력해주세요.');
+        } else if (formData.phoneNumber.length < 13) {
+            setTelerr('전화번호 형식이 잘못되었습니다.')
+        } else {
+            setTelerr('');
+        }
+    };
 
-const handlePasswordType = (e:any) => {
-    setPasswordType(()=>{
-    if(!passwordType.visible) {
-        return {type: 'text', visible:true};
-    }
-    return {type:'password',visible:false};
+    const handleCheckPwBlur = () => {
+        if (!checkpw) {
+            setCheckpwerr('비밀번호를 다시 입력해주세요.');
+        } else if (formData.password !== checkpw) {
+            setCheckpwerr('비밀번호가 일치하지 않습니다.');
+        } else {
+            setCheckpwerr('');
+        }
+    };
+
+    const handleFormSubmit = () => {
+        if (
+            formData.email.includes('@') &&
+            formData.password.length >= 8 && /\d/.test(formData.password) && /[!@#$%^&*]/.test(formData.password) &&
+            formData.password === checkpw &&
+            formData.phoneNumber.length >= 11
+        ) {
+            // 성공적인 제출 이후에 다음 페이지로 이동
+            onNextStep();
+        } else {
+            alert('모든 필드를 올바르게 작성해주세요.');
+        }
+    };
+
+    const handleCheckPw = (event: any) => {
+        setCheckpw(event.target.value);
+    };
+
+    const handleEmChange = (event: any) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            email: event.target.value,
+        }));
+    };
+
+    const handleIDChange = (event: any) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            accountID: event.target.value,
+        }));
+    };
+
+    const handlePwChange = (event: any) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            password: event.target.value,
+        }));
+    };
+
+    const handleTelChange = (event: any) => {
+        // Remove any existing dashes from the input value
+        const cleanedValue = event.target.value.replace(/-/g, '');
+
+        // Add dashes at appropriate positions
+        let formattedValue = '';
+        for (let i = 0; i < cleanedValue.length; i++) {
+            if (i === 3 || i === 7) {
+                formattedValue += '-';
+            }
+            formattedValue += cleanedValue[i];
+        }
+
+        setFormData((prevData) => ({
+            ...prevData,
+            phoneNumber: formattedValue,
+        }));
+    };
+
+    const [passwordType, setPasswordType] = useState({
+        type: 'password',
+        visible: false
     })
-}
 
-return (
-    <_Wrap >
-        <_FormWrap isInputVisible={isInputVisible}>
-        <_Subtitle>양식에 맞게 작성해주세요</_Subtitle>
+    const handlePasswordType = (e: any) => {
+        setPasswordType(() => {
+            if (!passwordType.visible) {
+                return { type: 'text', visible: true };
+            }
+            return { type: 'password', visible: false };
+        })
+    }
 
-        <_InputWrap>
-            <_Label>이메일</_Label>
-            <_Input
-            value={formData.email}
-            onChange={handleEmChange}
-            onBlur={handleEmBlur}
-            style={{ borderColor: emailerr ? "#ff0000" : "#000000" }}
-            type="text"
-            placeholder="이메일을 입력해주세요."
-            />
-            <p style={{ marginTop: "5px" , color: "#1E00D3", fontSize: "14px"}}>※이메일의 @앞자리가 아이디가 됩니다</p>
-            {emailerr && <ErrorText style={{ marginTop: "-5px"}}>{emailerr}</ErrorText>}
-        </_InputWrap>
-        <_InputWrap>
-            <_Label>비밀번호</_Label>
-            <_Input
-            value={formData.password}
-            onChange={handlePwChange}
-            type={passwordType.type}
-            placeholder="비밀번호 입력 (최소 8자)"
-            onBlur={handlePwBlur}
-            style={{ borderColor: pwerr ? "#ff0000" : "#000000" }}
-            minLength={8}
-            maxLength={12}
-            />
-            <_Logowrap onClick={handlePasswordType}>
-            {passwordType.visible ? <_Logo src='eye1.svg'></_Logo> : <_Logo src='eye2.svg'></_Logo>}
-            </_Logowrap>
-            {pwerr && <ErrorText>{pwerr}</ErrorText>}
-        </_InputWrap>
+    return (
+        <_Wrap >
+            <_FormWrap isInputVisible={isInputVisible}>
+                <_Subtitle>양식에 맞게 작성해주세요</_Subtitle>
 
-        <_InputWrap>
+                <_InputWrap>
+                    <_Label>이메일</_Label>
+                    <_Input
+                        value={formData.email}
+                        onChange={handleEmChange}
+                        onBlur={handleEmBlur}
+                        style={{ borderColor: emailerr ? "#ff0000" : "#000000" }}
+                        type="text"
+                        placeholder="이메일을 입력해주세요."
+                    />
+                    {emailerr && <ErrorText style={{ marginTop: "-5px" }}>{emailerr}</ErrorText>}
+                </_InputWrap>
+
+                <_InputWrap>
+                    <_Label>아이디</_Label>
+                    <_Input
+                        value={formData.accountID}
+                        onChange={handleIDChange}
+                        type="text"
+                        placeholder="아이디를 입력해주세요"
+                    />
+                </_InputWrap>
+
+                <_InputWrap>
+                    <_Label>비밀번호</_Label>
+                    <_Input
+                        value={formData.password}
+                        onChange={handlePwChange}
+                        type={passwordType.type}
+                        placeholder="비밀번호 입력 (최소 8자)"
+                        onBlur={handlePwBlur}
+                        style={{ borderColor: pwerr ? "#ff0000" : "#000000" }}
+                        minLength={8}
+                        maxLength={12}
+                    />
+                    <_Logowrap onClick={handlePasswordType}>
+                        {passwordType.visible ? <_Logo src='eye1.svg'></_Logo> : <_Logo src='eye2.svg'></_Logo>}
+                    </_Logowrap>
+                    {pwerr && <ErrorText>{pwerr}</ErrorText>}
+                </_InputWrap>
+
+                <_InputWrap>
                     <_Label>비밀번호 확인</_Label>
                     <_Input
                         value={checkpw}
@@ -204,31 +233,31 @@ return (
                         minLength={8}
                         maxLength={12}
                     />
-            {checkpwerr && <ErrorText>{checkpwerr}</ErrorText>}
+                    {checkpwerr && <ErrorText>{checkpwerr}</ErrorText>}
                 </_InputWrap>
-        <_InputWrap>
-            <_Label>전화번호</_Label>
-            <_Input
-            value={formData.phoneNumber}
-            onChange={handleTelChange}
-            style={{ borderColor: telerr ? "#ff0000" : "#000000" }}
-            type="text"
-            id="phoneNum" 
-            minLength={11}
-            maxLength={13}
-            placeholder="'-'없이 입력하세요."
-            onBlur={handleTelBlur}
-            />
-            {telerr && <ErrorText>{telerr}</ErrorText>}
-        </_InputWrap>
-        <_SignUpBtnWrap>
-            <_SignUpBtn type="button" onClick={handleFormSubmit}>
-                다음으로
-            </_SignUpBtn>
-        </_SignUpBtnWrap>
-        </_FormWrap>
-    </_Wrap>
-);
+                <_InputWrap>
+                    <_Label>전화번호</_Label>
+                    <_Input
+                        value={formData.phoneNumber}
+                        onChange={handleTelChange}
+                        style={{ borderColor: telerr ? "#ff0000" : "#000000" }}
+                        type="text"
+                        id="phoneNum"
+                        minLength={11}
+                        maxLength={13}
+                        placeholder="'-'없이 입력하세요."
+                        onBlur={handleTelBlur}
+                    />
+                    {telerr && <ErrorText>{telerr}</ErrorText>}
+                </_InputWrap>
+                <_SignUpBtnWrap>
+                    <_SignUpBtn type="button" onClick={handleFormSubmit}>
+                        다음으로
+                    </_SignUpBtn>
+                </_SignUpBtnWrap>
+            </_FormWrap>
+        </_Wrap>
+    );
 };
 
 export default AccountInput;
@@ -247,7 +276,7 @@ align-items: center;
 `;
 
 interface ContainerProps {
-isInputVisible: any;
+    isInputVisible: any;
 }
 
 const _FormWrap = styled.div<ContainerProps>`
