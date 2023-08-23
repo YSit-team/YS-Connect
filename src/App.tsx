@@ -25,6 +25,7 @@ import Profile from './pages/Account/Profile'
 import EditProfile from './pages/Account/EditProfile';
 import CommunityEdit from './pages/Community/CommunityEdit';
 import GatherForm from "./pages/Account/Signup/GatherForm"
+import 이용약관 from "./pages/Account/Signup/이용약관"
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);

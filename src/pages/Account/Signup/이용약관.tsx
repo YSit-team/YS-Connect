@@ -15,6 +15,14 @@ const Term: React.FC<TermsProps> = ({ onNextStep }) => {
         setIsAgreed(event.target.checked);
     };
 
+    const handleNextstep = () => {
+        if (isAgreed) {
+            onNextStep();
+        } else {
+            alert('이용약관에 동의해주세요');
+        }
+    }
+
     return (
         <_Wrap>
         <_FormWrap>
@@ -34,13 +42,7 @@ const Term: React.FC<TermsProps> = ({ onNextStep }) => {
             <_SignUpBtnWrap>
                 <_SignUpBtn
                     type="submit"
-                    onClick={() => {
-                        if (isAgreed) {
-                            onNextStep();
-                        } else {
-                            alert('이용약관에 동의해주세요');
-                        }
-                    }}
+                    onClick={handleNextstep}
                 >
                     다음으로
                 </_SignUpBtn>

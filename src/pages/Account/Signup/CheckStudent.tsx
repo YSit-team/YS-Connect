@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import axiosInstance from '../../../api/API_Server';
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
 
 type NextProps = {
     formData: {
@@ -16,77 +17,25 @@ type NextProps = {
 
 const CheckStudent: React.FC<NextProps> = ({ formData, onNextStep }) => {
     const [image, setImage] = useState<File | null>(null);
-
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
-    //const [imageData, setImgData] = useState<{
-    //     uri: string;
-    //     type: string;
-    //     fileName: string;
-    // } | null>(null);
 
-    // const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    //     const uploadedImage = event.target.files?.[0];
-    //     if (uploadedImage) {
-    //         setImage(uploadedImage);
-    //         setImgData({
-    //             uri: URL.createObjectURL(uploadedImage),
-    //             type: uploadedImage.type,
-    //             fileName: uploadedImage.name,
-    //         });
-    //     }
-    // };
-
-    // const handleImageChange = (event:any) => {
-    //     const file = event.target.files?.[0];
-    //     console.log(file)
-    //     if (file) {
-    //         //setImage(URL.createObjectURL(file));
-    //         setImage(file)
-    //     }
-    // };
+    let navigate = useNavigate();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setSelectedFile(file);
-
-            // 이미지 미리보기 생성
-            const reader = new FileReader();
-            reader.onload = () => {
-                setPreviewImage(reader.result as string);
-            };
-            reader.readAsDataURL(file);
         }
     };
 
     const handleCheckStudentIDForm = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        // if (!image) {
-        //     alert('먼저 사진을 촬영하거나 선택해주세요.');
-        //     return;
-        // }
-
         if (!selectedFile) {
             alert('먼저 사진을 선택해주세요.');
             return;
         }
         try {
-            // form.append('image', image);
-            // const imageInfo = {
-            //     uri: (URL.createObjectURL(image)),
-            //     type: image.type,
-            //     name: image.name,
-            // };
-
-            // Create FormDataEntryValue for the image
-            //const imageValue = new File([image], image.name, { type: image.type });
-            const imageData = {
-                uri: previewImage,
-                type: 'image/jpeg',
-                name: 'name.jpg',
-            }
             const form = new FormData();
             form.append('image', selectedFile);
 
@@ -96,8 +45,6 @@ const CheckStudent: React.FC<NextProps> = ({ formData, onNextStep }) => {
                 lastName: '길동',
             }));
 
-            //console.log(imageValue)
-
             // REST API 호출 및 처리 로직
             await axiosInstance.post('/register/CheckStudentID', form, {
                 headers: { 'Content-Type': 'multipart/form-data' }
@@ -105,6 +52,7 @@ const CheckStudent: React.FC<NextProps> = ({ formData, onNextStep }) => {
                 .then((res) => {
                     if (res.status === 200) {
                         alert(res.data.message)
+                        onNextStep()
                     } else {
                         alert('예외 발생')
                     }
@@ -135,7 +83,7 @@ const CheckStudent: React.FC<NextProps> = ({ formData, onNextStep }) => {
                 <_InputWrap>
                     <_Input type="file" accept="image/*" onChange={handleFileChange} />
                 </_InputWrap>
-                {image && <_Image src={URL.createObjectURL(image)} alt="학생증 사진" />}
+                {selectedFile && <_Image src={URL.createObjectURL(selectedFile)} alt="학생증 사진" />}
 
                 <_SignUpBtnWrap>
                     <_SignUpBtn type="button" onClick={handleCheckStudentIDForm}>

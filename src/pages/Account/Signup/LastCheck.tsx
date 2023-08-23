@@ -28,6 +28,7 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                         <_Input
                         value={formData.email}
                         type="text"
+                        readOnly
                         />
                     </_InputWrap>
                     <_InputWrap>
@@ -35,6 +36,7 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                         <_Input
                         value={formData.password}
                         type="text"
+                        readOnly
                         />
                     </_InputWrap>
                     <_InputWrap>
@@ -42,6 +44,7 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                         <_Input
                         value={formData.phoneNumber}
                         type="text"
+                        readOnly
                         />
                     </_InputWrap>
 
@@ -51,6 +54,7 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                         <_Input
                             value={formData.firstName}
                             type="text"
+                            readOnly
                         />
                     </_InputWrap>
                     <_InputWrap>
@@ -59,6 +63,7 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                         <_Input
                             value={formData.lastName}
                             type="text"
+                            readOnly
                         />
                     </_InputWrap>
 
@@ -66,7 +71,8 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                     <_Label>학번</_Label>
                     <_Input
                         value={formData.phoneNumber}
-                        type="number"
+                        type="text"
+                        readOnly
                     />
                 </_InputWrap>
                 

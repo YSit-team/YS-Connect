@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axiosInstance from "../../../api/API_Server";
 
 type AccountInputProps = {
     formData: {
@@ -36,13 +37,27 @@ const [telerr, setTelerr] = useState('');
 
 let navigate = useNavigate();
 
-const handleEmBlur = () => {
+const handleEmBlur = async (event:any) => {
+    const email = event.target.value
     if (!formData.email) {
         setEmailerr('이메일을 입력해주세요.');
     } else if (!formData.email.includes('@')) {
         setEmailerr('이메일 형식이 올바르지 않습니다.');
     } else {
-        setEmailerr('');
+        // try {
+        //     setEmailerr("중복검사중입니다.."); // 중복검사 중임을 표시
+        //     const response = await axiosInstance.post("/api/register", {
+        //         email
+        //     });
+    
+        //     const { status, data } = response;
+        //     setEmailerr(data.message);
+        // } catch (error) {
+        //     console.error(error);
+        //     alert("서버 연결 불가");
+        // } finally {
+        //     setEmailerr(""); // 중복검사 완료
+        // }
     }
 };
 
