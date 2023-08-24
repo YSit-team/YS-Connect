@@ -128,8 +128,8 @@ const Menubar = () => {
     return (
         <>
         <Navbar>
-        <Logo src="/icon/YSlogo.png" alt="logo" onClick={() => navigate('/')} />
         <Menu>
+            <Logo src="/icon/YSlogo.png" alt="logo" onClick={() => navigate('/')} />
             <LoginButton onClick={()=>navigate('/login')}>로그인</LoginButton>
         </Menu>
         </Navbar>
@@ -217,7 +217,7 @@ export default Menubar;
     color: #fff;
     padding: 0.5rem 0.7rem;
     border-radius: 0.3rem;
-    margin-right : 4.5rem;
+    margin-right : 2.5rem;
     font-size: 0.9rem;
     font-weight: bold;
     border-style: none;

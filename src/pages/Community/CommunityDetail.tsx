@@ -279,7 +279,7 @@ return (
         </Content>
         <CommentWrapper>
         <CommentInputWrapper>
-            <CommentAvatar src="/profile.jpeg" alt="Avatar" />
+            <CommentAvatar src="/icon/profile.jpeg" alt="Avatar" />
             <_Inputwrapper2>
             <CommentInput
             type="text"
