@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Menubar from '../components/rew';
+import Menubar from '../components/Menubar';
 
 const products = [
 {

@@ -6,7 +6,6 @@ import Menubar from '../components/Menubar'
 const Notlogin = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const bell: string = require("../assets/bell.svg").default;
     let navigate = useNavigate();
 
     return (

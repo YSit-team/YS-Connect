@@ -10,7 +10,7 @@ import Findpw from './pages/Account/Findpw';
 import Rental from './pages/Equipment/Rental';
 import ListDetail from './pages/Teacher/ListDetail'
 import RentalList from './pages/Teacher/RentalList'
-import Test from './pages/Test'
+import Test from './pages/검색기능테스트'
 import AddCamera from './pages/Equipment/AddCamera'
 import Notlogin from './pages/Notlogin'
 import RentalStatus from './pages/Equipment/RentalStatus'

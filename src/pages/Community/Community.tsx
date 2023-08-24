@@ -115,7 +115,7 @@ const Community = () => {
                 <_Name>작성자</_Name>
                 <_Time>작성일</_Time>
                 <_Views>조회</_Views>
-                <_Likes>좋아요</_Likes>
+                <_Likes>댓글 수</_Likes>
                 </_ListHead>
                 <_ListBody>
                 {
@@ -132,7 +132,7 @@ const Community = () => {
                                 <_Name>{data.author}</_Name>
                                 <_Time>{`${data.date.slice(0, 10)}`}</_Time>
                                 <_Views>{data.views}</_Views>
-                                <_Likes>{data.likes}</_Likes>
+                                <_Likes>{data.commentsCount}</_Likes>
                             </_Item>
                     )
                 })}

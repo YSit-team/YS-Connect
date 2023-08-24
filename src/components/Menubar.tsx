@@ -39,7 +39,7 @@ const Menubar = () => {
             return (
                 <>
                 <Navbar>
-                <Logo src="/YSlogo.png" alt="logo" onClick={() => navigate('/home')} />
+                <Logo src="/icon/YSlogo.png" alt="logo" onClick={() => navigate('/home')} />
                 <Menu>
                     <MenuItemWrapper>
                     <MenuItem onClick={() => navigate('/rental')}>
@@ -59,7 +59,7 @@ const Menubar = () => {
                     </MenuItem> */}
                     </MenuItemWrapper>
                     <Namewrap>
-                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='/Down.svg' style={{ width: '20px', height: '20px' }}></img></Name>
+                        <Name onClick={() => setIsModalVisible(!isModalVisible)}>{name+"님"}<img src='/icon/Down.svg' style={{ width: '20px', height: '20px' }}></img></Name>
                     </Namewrap>
                     {isModalVisible && (
                         <ModalContent>
@@ -71,7 +71,7 @@ const Menubar = () => {
 
                             <IconBtn_wrap>
                             <IconButton onClick={() => navigate('/edit')}>
-                                <Icon src='/user.svg'></Icon>
+                                <Icon src='/icon/user.svg'></Icon>
                             </IconButton>
                             <ButtonText>프로필 수정</ButtonText>
                             </IconBtn_wrap>
@@ -85,7 +85,7 @@ const Menubar = () => {
 
                             <IconBtn_wrap>
                             <IconButton onClick={Logout}>
-                                <Icon src='/signout.svg'></Icon>
+                                <Icon src='/icon/signout.svg'></Icon>
                             </IconButton>
                             <ButtonText>로그아웃</ButtonText>
                             </IconBtn_wrap>
@@ -101,7 +101,7 @@ const Menubar = () => {
             return (
                 <>
                 <Navbar>
-                <Logo src="/YSlogo.png" alt="logo" onClick={() => navigate('/rentallist')} />
+                <Logo src="/icon/YSlogo.png" alt="logo" onClick={() => navigate('/rentallist')} />
                 <Menu>
                     <MenuItemWrapper>
                     <MenuItem onClick={() => navigate('/rentallist')}>
@@ -128,11 +128,8 @@ const Menubar = () => {
     return (
         <>
         <Navbar>
-        <Logo src="/YSlogo.png" alt="logo" onClick={() => navigate('/')} />
+        <Logo src="/icon/YSlogo.png" alt="logo" onClick={() => navigate('/')} />
         <Menu>
-            <MenuItemWrapper>
-            
-            </MenuItemWrapper>
             <LoginButton onClick={()=>navigate('/login')}>로그인</LoginButton>
         </Menu>
         </Navbar>

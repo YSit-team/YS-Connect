@@ -256,7 +256,7 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
                         minLength={8}
                     />
                     <_Logowrap onClick={handlePasswordType}>
-                        {passwordType.visible ? <_Logo src='eye1.svg'></_Logo> : <_Logo src='eye2.svg'></_Logo>}
+                        {passwordType.visible ? <_Logo src='/icon/eye1.svg'></_Logo> : <_Logo src='/icon/eye2.svg'></_Logo>}
                     </_Logowrap>
                     {pwerr && <ErrorText>{pwerr}</ErrorText>}
                 </_InputWrap>

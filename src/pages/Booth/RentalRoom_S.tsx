@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Menubar from '../../components/Menubar';
 import axiosInstance from '../../api/API_Server';
-import { useNavigate, Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 
 const RentalRoom_S = () => {
@@ -17,7 +17,7 @@ const RentalRoom_S = () => {
   const [roomUsingEndTime, setRoomUsingEndTime] = useState('')
   const [roomPurpose, setRoomPurpose] = useState('')
 
-  const test = async() =>{
+  const test = async () => {
     await axiosInstance.post('/profile', { id: "a7315506-ded3-42e9-aab6-0c92a70aca2a", job: "student" })
       .then((res) => {
         setFirstName(res.data.firstName)
@@ -27,8 +27,8 @@ const RentalRoom_S = () => {
 
       })
 
-  } 
-  const test2 = async() =>{
+  }
+  const test2 = async () => {
     console.log(roomUsingStartTime)
     console.log(roomUsingEndTime)
     console.log(roomNumber)
@@ -46,92 +46,94 @@ const RentalRoom_S = () => {
       console.log(res.data)
     })
 
-    }
-        
-        const RoomInfo = async() => {
-          await axiosInstance.post('/RoomRental/RoomStatus')
-                .then(res => {
-                  const a = [
-                  ]
-      
-                  if(res.data.room1.is_available === 0){
-                    a.push({id : 1, value : "1번부스" ,disabled : false})
-                  } else{
-                    a.push({id : 1, value : "1번부스" ,disabled : true})
-                  }
-                  if(res.data.room2.is_available === 0){
-                    a.push({id : 2, value : "2번부스" ,disabled : false})
-                  } else{
-                    a.push({id : 2, value : "2번부스" ,disabled : true})
-                  }
-                  if(res.data.room3.is_available === 0){
-                    a.push({id : 3, value : "3번부스" ,disabled : false})
-                  } else{
-                    a.push({id : 3, value : "3번부스" ,disabled : true})
-                  }
-                  if(res.data.room4.is_available === 0){
-                    a.push({id : 4, value : "4번부스" ,disabled : false})
-                  } else{
-                    a.push({id : 4, value : "4번부스" ,disabled : true})
-                  }
-                  const updatedRoomData = [...a];
-                  setRoomData(updatedRoomData);
-          })
-          
-        }
+  }
 
-    useEffect(()=>{
-      RoomInfo();
-      test();
-    },[])
-    return (
-      <_Wrap>
-        <Menubar/>
+  const RoomInfo = async () => {
+    await axiosInstance.post('/RoomRental/RoomStatus')
+      .then(res => {
+        const a = [
+        ]
+
+        if (res.data.room1.is_available === 0) {
+          a.push({ id: 1, value: "1번부스", disabled: false })
+        } else {
+          a.push({ id: 1, value: "1번부스", disabled: true })
+        }
+        if (res.data.room2.is_available === 0) {
+          a.push({ id: 2, value: "2번부스", disabled: false })
+        } else {
+          a.push({ id: 2, value: "2번부스", disabled: true })
+        }
+        if (res.data.room3.is_available === 0) {
+          a.push({ id: 3, value: "3번부스", disabled: false })
+        } else {
+          a.push({ id: 3, value: "3번부스", disabled: true })
+        }
+        if (res.data.room4.is_available === 0) {
+          a.push({ id: 4, value: "4번부스", disabled: false })
+        } else {
+          a.push({ id: 4, value: "4번부스", disabled: true })
+        }
+        const updatedRoomData = [...a];
+        setRoomData(updatedRoomData);
+      })
+
+  }
+
+  useEffect(() => {
+    RoomInfo();
+    test();
+  }, [])
+  return (
+    <_Wrap>
+      <Menubar />
       <_Writewrap>
         <_Header>방음부스 신청</_Header>
         <_Listwrap>
         </_Listwrap>
 
 
-{/*-----------------------------------신청서 작성----------------------------------*/}
+        {/*-----------------------------------신청서 작성----------------------------------*/}
         <_Subtext>신청서 작성 <_SubmitBtn type="submit" bg="#1E00D3" color="#ffffff" onClick={test2}>제출하기</_SubmitBtn></_Subtext>
-        <_Inputtitle><Label>이름</Label><_Input value={firstName+lastName} disabled/></_Inputtitle>
-        <_Inputtitle><Label>학번</Label><_Input value={studentID} disabled/></_Inputtitle>
-        <_Inputtitle><Label>방음부스</Label><select name="language">
-                <option>방음부스 선택하기</option>
-                {
-                  roomdata.map((item:any)=>(
-                    <option key={item.id}  value={item.id} disabled ={item.disabled}>{item.id} 방음부스</option>
-                  ))}
-              </select></_Inputtitle>
-        <_Inputtitle><Label>대여 시간</Label><_Input type="time"  min="08:40" max="22:00" 
-        onChange={(event) =>{
-          setRoomUsingStartTime(event.target.value)
-        }}/><_Line1/><_Input type="time" min="08:40" max="22:00" 
-        onChange={(event) =>{
-          setRoomUsingEndTime(event.target.value)
-        }}/></_Inputtitle>
+        <_Inputtitle><Label>이름</Label><_Input value={firstName + lastName} disabled /></_Inputtitle>
+        <_Inputtitle><Label>학번</Label><_Input value={studentID} disabled /></_Inputtitle>
+        <_Inputtitle><Label>방음부스</Label>
+        <select name="language">
+          <option>방음부스 선택하기</option>
+          {
+            roomdata.map((item: any) => (
+              <option key={item.id} value={item.id} disabled={item.disabled}>{item.id} 방음부스</option>
+            ))
+          }
+        </select></_Inputtitle>
+        <_Inputtitle><Label>대여 시간</Label><_Input type="time" min="08:40" max="22:00"
+          onChange={(event) => {
+            setRoomUsingStartTime(event.target.value)
+          }} /><_Line1 /><_Input type="time" min="08:40" max="22:00"
+            onChange={(event) => {
+              setRoomUsingEndTime(event.target.value)
+            }} /></_Inputtitle>
         <_Input2title>이용목적 및 이용내역
           <_Input2wrap>
-          <_Subinputtitle>※사용 용도, 작품 내용 등을 구체적으로 적어주세요.</_Subinputtitle>
-              <_Input2
-              onChange={(event) =>{
+            <_Subinputtitle>※사용 용도, 작품 내용 등을 구체적으로 적어주세요.</_Subinputtitle>
+            <_Input2
+              onChange={(event) => {
                 setRoomPurpose(event.target.value);
-                  }}
+              }}
               placeholder='-이용목적: (예: 영화콘텐츠 편집, 행사영상 편집)&#13;&#10;
                     - 사용일자:  월  일&#13;&#10;
                       - 장소:&#13;&#10;
                       - 제작내용:'>
-              </_Input2>
+            </_Input2>
           </_Input2wrap>
 
         </_Input2title>
       </_Writewrap>
       {/*---------------------------------------------------------------------*/}
-      </_Wrap>
-      
-    )
-  }
+    </_Wrap>
+
+  )
+}
 
 export default RentalRoom_S;
 
@@ -258,7 +260,7 @@ margin-right: 50px;
 }
 `
 //제출버튼
-interface Container{
+interface Container {
   bg: any;
   color: any;
 }
@@ -306,4 +308,4 @@ const _Input2 = styled.textarea`
         font-size: 13px;
     }
 `
-;
+  ;
