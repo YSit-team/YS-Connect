@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AdminHome from './pages/Teacher/AdminHome'
 import UserHome from './pages/Student/UserHome'
 import UserLogin from './pages/Account/Login';
-import Signup from './pages/Account/Signup';
 import Findid from './pages/Account/Findid';
 import Findpw from './pages/Account/Findpw';
 import Rental from './pages/Equipment/Rental';
@@ -25,7 +24,6 @@ import Profile from './pages/Account/Profile'
 import EditProfile from './pages/Account/EditProfile';
 import CommunityEdit from './pages/Community/CommunityEdit';
 import GatherForm from "./pages/Account/Signup/GatherForm"
-import 이용약관 from "./pages/Account/Signup/이용약관"
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -36,7 +34,6 @@ function App() {
       <Route path="/home" element={<UserHome />} />
       <Route path="/admin" element={<AdminHome />} />
       <Route path="/login" element={<UserLogin/>} />
-      <Route path="/sign-up" element={<Signup />} />
       <Route path="/find-id" element={<Findid />} />
       <Route path="/find-pw" element={<Findpw />} />
       <Route path="/rental" element={<Rental />} />

@@ -10,7 +10,8 @@ type NextProps = {
         phoneNumber: string;
         firstName: string,
         lastName: string,
-        studentID: string
+        studentID: string,
+        birthday: string
     };
     onNextStep: () => void;
 };

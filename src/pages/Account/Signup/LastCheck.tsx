@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axiosInstance from "../../../api/API_Server";
 
 type ProfileInputProps = {
     formData: {
@@ -11,13 +12,51 @@ type ProfileInputProps = {
         phoneNumber: string;
         firstName: string,
         lastName: string,
-        studentID: string
+        studentID: string,
+        birthday: string
     };
     onNextStep: () => void;
 };
 
 const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
     let navigate = useNavigate();
+
+    const handleSubmit = () => {
+        try {
+                axiosInstance.post("/register", {
+                    email: formData.email,
+                    accountID: formData.accountID,
+                    password: formData.password,
+                    phoneNumber: formData.phoneNumber,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    studentID: formData.studentID,
+                    birthday: formData.birthday
+                }).then((res) => {
+                    if (res.status === 200) {
+                        alert(res.data.message)
+                        navigate("/login")
+                    } else {
+                        alert(res.data.message)
+                    }
+                }).catch((error) => {
+                    console.log(error);
+
+                    if (error.response) {
+                        const res = error.response;
+                        if (res.state === 400) {
+                            alert(res.data.errorDescription);
+                        } else {
+                            alert(res.data.errorDescription);
+                        }
+                    } else {
+                        alert('서버 통신 실패');
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <_Wrap>
@@ -79,6 +118,16 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                     </_InputWrap>
 
                     <_InputWrap>
+                        <_Label>생년월일</_Label>
+                        {/* Use your Nameinput styled component here */}
+                        <_Input
+                            value={formData.birthday}
+                            type="text"
+                            readOnly
+                        />
+                    </_InputWrap>
+
+                    <_InputWrap>
                     <_Label>학번</_Label>
                     <_Input
                         value={formData.phoneNumber}
@@ -88,7 +137,7 @@ const LastCheck: React.FC<ProfileInputProps> = ({ formData, onNextStep }) => {
                 </_InputWrap>
                 
                 <_SignUpBtnWrap>
-                    <_SignUpBtn type="submit">
+                    <_SignUpBtn type="submit" onClick={handleSubmit}>
                         가입하기
                     </_SignUpBtn>
                 </_SignUpBtnWrap>

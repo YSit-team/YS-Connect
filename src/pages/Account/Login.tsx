@@ -139,7 +139,7 @@ const UserLogin = () => {
                 <_Line/>
                 <_Find onClick={()=>navigate('/find-pw')}>비밀번호 찾기</_Find>
                 <_Line/>
-                <_Find onClick={()=>navigate('/sign-up')}>회원가입</_Find>
+                <_Find onClick={()=>navigate('/signup-form')}>회원가입</_Find>
             </_FindWrap>
             </_Form>
             </_Wrapper>

@@ -11,7 +11,8 @@ type ProfileInputProps = {
         phoneNumber: string;
         firstName: string,
         lastName: string,
-        studentID: string
+        studentID: string,
+        birthday: string
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
@@ -21,7 +22,8 @@ type ProfileInputProps = {
             phoneNumber: string;
             firstName: string,
             lastName: string,
-            studentID: string
+            studentID: string,
+            birthday: string
         }>
     >;
     onNextStep: () => void;
@@ -31,6 +33,7 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ formData, setFormData, onNe
     const [numerr, setNumerr] = useState("");
     const [fnerr, setFnerr] = useState("");
     const [lnerr, setLnerr] = useState("");
+    const [birtherr, setBirtherr] = useState("");
     const [error, setError] = useState('');
     let navigate = useNavigate();
 
@@ -60,6 +63,14 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ formData, setFormData, onNe
         }
     };
 
+    const handleBirthBlur = () => {
+        if (!formData.birthday) {
+            setBirtherr('생년월일을 입력해주세요.');
+        }else {
+            setBirtherr('');
+        }
+    };
+
     const handleFnChange = (event: any) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -78,6 +89,13 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ formData, setFormData, onNe
         setFormData((prevData) => ({
             ...prevData,
             studentID: event.target.value,
+        }));
+    };
+
+    const handleBirthChange = (event: any) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            birthday: event.target.value,
         }));
     };
 
@@ -141,7 +159,22 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ formData, setFormData, onNe
                         maxLength={5}
                     />
                     {numerr && <ErrorText>{numerr}</ErrorText>}
-                </_InputWrap>
+                    </_InputWrap>
+
+                    <_InputWrap>
+                    <_Label>생년월일</_Label>
+                    <_Input
+                        value={formData.birthday}
+                        onChange={handleBirthChange}
+                        onBlur={handleBirthBlur}
+                        style={{ borderColor: birtherr ? "#ff0000" : "#000000" }}
+                        type="text"
+                        placeholder="생년월일을 입력해주세요(ex.20050318)"
+                        minLength={8}
+                        maxLength={8}
+                    />
+                    {birtherr && <ErrorText>{birtherr}</ErrorText>}
+                    </_InputWrap>
                 
                 <_SignUpBtnWrap>
                     <_SignUpBtn type="submit" onClick={handleFormSubmit}>

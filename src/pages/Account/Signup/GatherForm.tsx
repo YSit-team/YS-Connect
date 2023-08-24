@@ -14,7 +14,8 @@ const [formData, setFormData] = useState({
     phoneNumber: "",
     firstName: "",
     lastName: "",
-    studentID: ""
+    studentID: "",
+    birthday: ""
     // ...기타 폼 필드
 });
 

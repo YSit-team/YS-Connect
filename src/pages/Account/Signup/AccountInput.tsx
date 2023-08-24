@@ -12,7 +12,8 @@ type AccountInputProps = {
         phoneNumber: string;
         firstName: string,
         lastName: string,
-        studentID: string
+        studentID: string,
+        birthday: string
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
@@ -22,7 +23,8 @@ type AccountInputProps = {
             phoneNumber: string;
             firstName: string,
             lastName: string,
-            studentID: string
+            studentID: string,
+            birthday: string
         }>
     >;
     onNextStep: () => void;
@@ -33,6 +35,7 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
     const [checkpw, setCheckpw] = useState("");
     const [isInputVisible, setIsInputVisible] = useState(true);
     const [emailerr, setEmailerr] = useState('');
+    const [accountiderr, setAccountIDerr] = useState('');
     const [pwerr, setPwerr] = useState('');
     const [checkpwerr, setCheckpwerr] = useState('');
     const [telerr, setTelerr] = useState('');
@@ -73,6 +76,40 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
         }
     };
 
+    const handleIDBlur = (event:any) => {
+        const accountID = event.target.value;
+
+        try {
+            setAccountIDerr("중복검사중입니다.."); // 중복검사 중임을 표시
+            setTimeout(() => {
+                axiosInstance.post("/register", {
+                    accountID
+                }).then((res) => {
+                    if (res.status === 200) {
+                        setAccountIDerr('');
+                    } else {
+                        setAccountIDerr('예외 발생');
+                    }
+                }).catch((error) => {
+                    console.log(error);
+
+                    if (error.response) {
+                        const res = error.response;
+                        if (res.state === 400) {
+                            setAccountIDerr(res.data.errorDescription);
+                        } else {
+                            setAccountIDerr(res.data.errorDescription);
+                        }
+                    } else {
+                        alert('서버 통신 실패');
+                    }
+                });
+            }, 1000)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handlePwBlur = () => {
         if (!formData.password) {
             setPwerr('비밀번호를 입력해주세요.');
@@ -105,8 +142,9 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
 
     const handleFormSubmit = () => {
         if (
-            formData.email.includes('@') &&
-            formData.password.length >= 8 && /\d/.test(formData.password) && /[!@#$%^&*]/.test(formData.password) &&
+            emailerr.length <= 1  &&
+            accountiderr.length <= 1 &&
+            pwerr.length <= 1 &&
             formData.password === checkpw &&
             formData.phoneNumber.length >= 11
         ) {
@@ -198,9 +236,12 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
                     <_Input
                         value={formData.accountID}
                         onChange={handleIDChange}
+                        onBlur={handleIDBlur}
+                        style={{ borderColor: accountiderr ? "#ff0000" : "#000000" }}
                         type="text"
                         placeholder="아이디를 입력해주세요"
                     />
+                    {accountiderr && <ErrorText style={{ marginTop: "-5px" }}>{accountiderr}</ErrorText>}
                 </_InputWrap>
 
                 <_InputWrap>
@@ -213,7 +254,6 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
                         onBlur={handlePwBlur}
                         style={{ borderColor: pwerr ? "#ff0000" : "#000000" }}
                         minLength={8}
-                        maxLength={12}
                     />
                     <_Logowrap onClick={handlePasswordType}>
                         {passwordType.visible ? <_Logo src='eye1.svg'></_Logo> : <_Logo src='eye2.svg'></_Logo>}
@@ -231,7 +271,6 @@ const AccountInput: React.FC<AccountInputProps> = ({ formData, setFormData, onNe
                         placeholder="비밀번호를 다시 입력하세요."
                         style={{ borderColor: checkpwerr ? "#ff0000" : "#000000" }}
                         minLength={8}
-                        maxLength={12}
                     />
                     {checkpwerr && <ErrorText>{checkpwerr}</ErrorText>}
                 </_InputWrap>
