@@ -68,6 +68,10 @@ const UserLogin = () => {
                     }) => {
                         sessionStorage.setItem('userId', res.data.id);
                         sessionStorage.setItem('job', res.data.job);
+                        sessionStorage.setItem('name', res.data.firstname + res.data.lastName);
+                        sessionStorage.setItem('phoneNum', res.data.phoneNumber);
+                        sessionStorage.setItem('studentID', res.data.studentID);
+                        sessionStorage.setItem('email', res.data.email);
                         if (res.status == 200) {
                             navigate("/")
                             alert(res.data.message)
@@ -86,8 +90,8 @@ const UserLogin = () => {
                         }
                     })
                     .catch((error)=>{
-                        console.log(error)
-                        alert("서버 연결불가")
+                        console.log(error);
+                        alert('로그인 실패');
                     })
                 console.log({form})
                 }}>

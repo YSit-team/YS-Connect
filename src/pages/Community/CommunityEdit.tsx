@@ -104,13 +104,6 @@ const CommunityWrite: React.FC = () => {
             <Container>
             <_BoardTitle>커뮤니티 수정</_BoardTitle>
 
-            {/* <CategorySelect value={category} onChange={handleCategoryChange}>
-            <option value="">게시판을 선택해주세요</option>
-            <option value="technology">기술</option>
-            <option value="travel">여행</option>
-            <option value="food">음식</option>
-            </CategorySelect> */}
-
             <TitleInput
             type="text"
             placeholder="제목을 입력해주세요."

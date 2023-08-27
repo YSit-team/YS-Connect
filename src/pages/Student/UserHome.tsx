@@ -51,6 +51,17 @@ const Home = () => {
           "email": email, // fill user's landline number
     }});
 
+    useEffect(() => {
+        if (ID) {
+            axiosInstance
+            .post("/profile", { id: ID, job: job })
+            .then((res) => {
+                setGrade(res.data.studentID.substring(0, 1)); // 학년 업데이트
+                setClassnum(res.data.studentID.substring(2, 3)); // 학년 업데이트
+            })
+            .catch((error) => console.log(error));
+        }
+    }, [ID, job]); // ID나 job이 변경될 때에만 Getprofile() 호출;
     
     const params = { //페이지 수 설정
         page: 1,
@@ -135,24 +146,21 @@ const Home = () => {
                 });
         }, []);
 
-        useEffect(() => { //시간표 불러오기
-            const grade = studentID.substring(0, 1);
-            const classNum = studentID.substring(2, 3)
-        
-            const fetchTimetable = async () => {
-                if (grade && classNum) { // grade와 classNum 값이 모두 존재할 때만 실행
-                    try {
+        const fetchTimetable = async () => {
+            if (grade && classNum) { // grade와 classNum 값이 모두 존재할 때만 실행
+                try {
                     const res = await axiosInstance.post("/timeTable", { GRADE:grade, CLASS_NM:classNum});
-                        setschedule(res.data.data);
-                        console.log(schedule);
-                    } catch (error) {
+                    setschedule(res.data.data);
+                    console.log(schedule);
+                } catch (error) {
                     alert("시간표 불러오기 실패");
-                    }
                 }
-                };
+            }
+        };
         
+        useEffect(() => { //시간표 불러오기
             fetchTimetable();
-        },[]);
+        },[grade, classNum]);
         
 
 

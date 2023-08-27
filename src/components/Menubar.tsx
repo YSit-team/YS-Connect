@@ -6,33 +6,41 @@ import axiosInstance from '../api/API_Server';
 
 const Menubar = () => {
     let navigate = useNavigate();
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [ID, setID] = useState(sessionStorage.getItem('userId'));
     const [job, setjob] = useState(sessionStorage.getItem('job'));
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [name, setname] = useState(sessionStorage.getItem('name'));
     const [email, setemail] = useState(sessionStorage.getItem('email'));
 
+    useEffect(() => {
+        Getprofile();
+    }, [ID, job]); // ID나 job이 변경될 때에만 Getprofile() 호출
+    
+    const updateSessionStorage = (data:any) => {
+        sessionStorage.setItem('name', data.firstName + data.lastName);
+        sessionStorage.setItem('phoneNum', data.phoneNumber);
+        sessionStorage.setItem('studentID', data.studentID);
+        sessionStorage.setItem('email', data.email);
+    }
+
     const Logout = () => {
-        sessionStorage.removeItem('userId');
+        sessionStorage.clear(); // Clear all session storage data
         navigate('/')
         window.location.reload();
     }
     
-    useEffect(() => {
+    const Getprofile = () => {
     if (ID) {
         axiosInstance
         .post("/profile", { id: ID, job: job })
         .then((res) => {
             console.log(res.data);
-            sessionStorage.setItem('name', res.data.firstName + res.data.lastName);
-            sessionStorage.setItem('phoneNum', res.data.phoneNumber);
-            sessionStorage.setItem('studentID', res.data.studentID);
-            sessionStorage.setItem('email', res.data.email);
+            updateSessionStorage(res.data);
+            setname(res.data.firstName + res.data.lastName); // 이름 업데이트
+            setemail(res.data.email); // 이메일 업데이트
         })
         .catch((error) => console.log(error));
-    }
-    }, [ID, job]);
+    }};
 
     if (ID) {
         if(job == "student") {
