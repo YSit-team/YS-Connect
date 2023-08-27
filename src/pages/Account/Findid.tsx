@@ -31,15 +31,29 @@ const ApplicationForm = () => {
   const [popupcart, setPopupCart]: any[] = useState([]); // 모달 내 장바구니 아이템을 관리하는 상태
   const [Product, setProduct] = useState(Productlist);
   const [itemBorderColors, setItemBorderColors]: any[] = useState([]);
+  const [selectedSort, setSelectedSort] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSubmit = (e:any) => {
-    e.preventDefault();
-    // Handle form submission here (e.g., sending data to the server)
-    console.log('Form submitted!');
+  //팝업 장비 검색관련 함수////////////////////////////
+
+  const filteredProducts = Productlist.filter(product => {
+    const nameMatch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const sortMatch = selectedSort === 'all' || product.sort.toLowerCase() === selectedSort.toLowerCase();
+    return nameMatch && sortMatch;
+  });
+  
+  const handleSortClick = (sort:any) => {
+      setSelectedSort(sort);
   };
 
-    // 모달 관련 상태와 함수
-  
+  const handleSearchChange = (event:any) => { //검색인풋
+    setSearchQuery(event.target.value);
+  };
+
+  //////////////////////////////////////////////
+
+    // 모달 관련 상태와 함수////////////////////////////////
+
     const handleRemovePopupItem = (index:any) => {
       // 모달 내 장바구니에서 아이템 삭제
       const updatedCart = [...popupcart];
@@ -59,7 +73,9 @@ const ApplicationForm = () => {
       setIsModalVisible(false); // 처리 후 모달 닫기
     };
 
-    const handleProductClick = (i: number) => {
+    ////////////////////////////////////////////////////
+
+    const handleProductClick = (i: number) => { //장비 클릭했을때 이벤트/////
       const itemId:any = Product[i].id;
 
         if (itemExistsInCart(itemId)) {
@@ -77,18 +93,11 @@ const ApplicationForm = () => {
           };
           setPopupCart([...popupcart, cartItem]);
         }
-  
-        // 선택한 아이템의 index 찾기
-        const selectedProductIndex = itemBorderColors.findIndex((item:any) => item?.id === itemId);
-        if (selectedProductIndex !== -1) {
-          // 기존 색상과 반대 색상으로 변경
-          const newBorderColor = itemBorderColors[selectedProductIndex]?.color === '#B7B7B7' ? 'red' : '#B7B7B7';
-          
-          // 선택한 아이템의 border 색 업데이트
-          const newBorderColors = [...itemBorderColors];
-          newBorderColors[selectedProductIndex] = { id: itemId, color: newBorderColor };
-          setItemBorderColors(newBorderColors);
-        }
+    };
+
+    const handleSubmit = (e:any) => { ///전송 함수
+      e.preventDefault();
+      console.log('Form submitted!');
     };
 
   return (
@@ -200,24 +209,25 @@ const ApplicationForm = () => {
               <RentalListWrap>
                   <Sortmenu>
                     <_SortWrap>
-                      <_Sort>카메라</_Sort>
-                      <_Sort>삼각대</_Sort>
-                      <_Sort>조명</_Sort>
-                      <_Sort>녹음</_Sort>
+                      <_Sort isSelected={selectedSort === 'all'} onClick={() => handleSortClick('all')}>전체</_Sort>
+                      <_Sort isSelected={selectedSort === 'camera'} onClick={() => handleSortClick('camera')}>카메라</_Sort>
+                      <_Sort isSelected={selectedSort === 'light'} onClick={() => handleSortClick('light')}>조명</_Sort>
+                      <_Sort isSelected={selectedSort === 'mic'} onClick={() => handleSortClick('mic')}>녹음</_Sort>
                     </_SortWrap>
-                      <Search/>
+                      <Search type="text" value={searchQuery} onChange={handleSearchChange} placeholder="장비를 검색하세요."/>
+                      <button onClick={() => handleSortClick('all')}>초기화</button>
                   </Sortmenu>
                   {
-                  Product.map((a, i)=>{
+                  filteredProducts.map(product =>{
                           return (
                               <Productwrap
-                                  onClick={() => handleProductClick(i)}
-                                  key={i}
+                                  onClick={() => handleProductClick(product.id)}
+                                  key={product.id}
                                   >
-                              <ImgBorder style={{ border: itemBorderColors[i]?.color || '#B7B7B7' }}>
-                              <ProductImg src={`product/${Product[i].url}`} />
+                              <ImgBorder style={{ border: '#B7B7B7' }}>
+                              <ProductImg src={`product/${product.url}`} />
                               </ImgBorder>
-                              <ProductName>{Product[i].name}</ProductName>
+                              <ProductName>{product.name}</ProductName>
                               </Productwrap>
                           )
                           })
@@ -310,6 +320,7 @@ const BackButton = styled.div`
   text-decoration: none;
   font-weight: bold;
   font-size: 18px;
+  cursor: pointer;
   
 
   &:hover {
@@ -429,8 +440,12 @@ const _SortWrap = styled.span`
     @media (max-width: 600px) {
     }
 `
+interface SortProps {
+  isSelected: boolean;
+  onClick: () => void;
+}
 
-const _Sort = styled.div`
+const _Sort = styled.div<SortProps>`
     font-size: 16px;
     padding: 15px;
     cursor: pointer;
@@ -440,8 +455,12 @@ const _Sort = styled.div`
     }
 
     :hover{
-        border-bottom: 1px solid #1E00D3;
+        border-bottom: 1.5px solid #1E00D3;
     }
+
+    ${props => props.isSelected && `
+        border-bottom: 1.5px solid #1E00D3;
+    `}
 `
 
 const Search = styled.input`

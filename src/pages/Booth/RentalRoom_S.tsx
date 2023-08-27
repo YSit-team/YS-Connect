@@ -88,7 +88,7 @@ const RentalRoom_S = () => {
     <_Wrap>
       <Menubar />
       <_Writewrap>
-        <_Header>방음부스 신청</_Header>
+        <_Header>준비중입니다..</_Header>
         <_Listwrap>
         </_Listwrap>
 
