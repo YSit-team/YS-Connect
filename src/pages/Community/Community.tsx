@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Menubartest from '../../components/Menubar';
 import axios from 'axios';
 import Menubar from '../../components/Menubar';
 import { Link } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
-import { getByDisplayValue } from '@testing-library/react';
+import { Ring } from '@uiball/loaders'
 
 const Community = () => {
     let navigate = useNavigate();
@@ -102,7 +101,14 @@ const Community = () => {
     return (
         <>
             {postsData.length == 0 ?
-                <div>로딩중</div>
+            <Rodingwrap>
+                <Ring 
+                size={40}
+                lineWeight={5}
+                speed={2} 
+                color="black" 
+                />
+            </Rodingwrap>
                 :
                 <> 
                 <_GlobalWrap>
@@ -282,4 +288,10 @@ const PrevBtn = styled.a`
 const NextBtn = styled.a`
     margin-left: 15px;
     cursor: pointer;
+`
+
+const Rodingwrap = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `

@@ -4,6 +4,7 @@ import Menubar from '../../components/Menubar';
 import { useParams } from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
 import axiosInstance from '../../api/API_Server';
+import { Ring } from '@uiball/loaders'
 
 interface PostData {
 image: any;
@@ -211,7 +212,12 @@ useEffect(() => {
 }, [id, replyForm]);
 
 if (postsData === null) {
-    return <div>로딩중...</div>;
+    return <Rodingwrap><Ring
+            size={40}
+            lineWeight={5}
+            speed={2}
+            color="black"
+            /></Rodingwrap>;
 }
 
 return (
@@ -628,3 +634,11 @@ ${ReplyInput}:focus ~ & {
     transform: scaleX(1);
 }
 `;
+
+const Rodingwrap = styled.div`
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+`
