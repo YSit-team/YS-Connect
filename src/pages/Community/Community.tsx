@@ -77,7 +77,7 @@ const Community = () => {
     const handle = async () => {
       const params = {
         page: page,
-        limit: 2,
+        limit: 10,
       };
 
       //console.log(page);
