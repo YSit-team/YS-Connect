@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import Menubartest from "../../components/Menubar";
-import axios from "axios";
-import Menubar from "../../components/Menubar";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { getByDisplayValue } from "@testing-library/react";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+import Menubar from '../../components/Menubar';
+import { Link } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import { Ring } from '@uiball/loaders'
 
 const Community = () => {
   let navigate = useNavigate();
@@ -100,18 +99,22 @@ const Community = () => {
 
   return (
     <>
-      {postsData.length == 0 ? (
-        <div>로딩중</div>
-      ) : (
-        <>
-          <_GlobalWrap>
-            <Menubar />
-            <_BoardListWrap>
-              <_BoardTitle>커뮤니티</_BoardTitle>
-              <div>
-                page:{page} , currentPageSet:{currentPageSet} , totalSets:{totalSets} , totalpage:{totalpage}
-              </div>
-              <_BoardList>
+            {postsData.length == 0 ?
+            <Rodingwrap>
+                <Ring 
+                size={40}
+                lineWeight={5}
+                speed={2} 
+                color="black" 
+                />
+            </Rodingwrap>
+                :
+                <> 
+                <_GlobalWrap>
+                <Menubar/>
+                <_BoardListWrap>
+                <_BoardTitle>커뮤니티</_BoardTitle>
+                <_BoardList>
                 <_ListHead>
                   <_Title>제목</_Title>
                   <_Name>작성자</_Name>
@@ -347,4 +350,10 @@ const NextBtn = styled.a`
   :hover {
     text-decoration: underline;
   }
+`;
+
+const Rodingwrap = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
