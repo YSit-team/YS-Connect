@@ -1,188 +1,136 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Menubar from '../components/Menubar'
+import Menubar from '../components/Menubar';
 
 const Notlogin = () => {
-    const [isNavOpen, setIsNavOpen] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
     let navigate = useNavigate();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+    const handleResize = () => {
+        setIsMobile(window.innerWidth <= 600);
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <>
-            <Menubar/>
-            <Alert><div>로그인 후 이용해주세요.</div></Alert>
+            <HomeImgwrap>
+            {isMobile ? <div style={{width: '100vw', height: '100vh', backgroundColor: '#000000'}}></div> : <HomeImg src='DesktopHome.png'/>}
+                {/* <HomeImg src={isMobile ? 'MobileHome.png' : 'DesktopHome.png'} alt="홈 배경화면" /> */}
+                {isMobile ? <>
+                    <Title>
+                        당신 근처의{'\n'}
+                        학교 생활 도우미
+                    </Title>
+                    
+                    <LogoImg src="/icon/YSlogo.png" alt="" />
+                    </> : ''}
+                <Buttonwrap>
+                    <Button>로그인</Button>
+                    <Button>회원가입</Button>
+                </Buttonwrap>
+                <Buttonwrap style={{top : "75%"}}>
+                    <Button>Google Play</Button>
+                    <Button>App Store</Button>
+                </Buttonwrap>
+            </HomeImgwrap>
         </>
     );
 }
 
 export default Notlogin;
 
-const Navbar = styled.nav`
-    display: flex;
-    align-items: center;
-    /* justify-content: space-between; */
-    padding: 0.5rem 1rem;
-    color: #555555;
-    background-color: rgba( 255, 255, 255, 0.8 );
-    border-bottom: 0.8px solid #999999;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-`;
+const HomeImgwrap = styled.div`
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
 
-const _Logo = styled.img`
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-`;
-
-const _Link = styled.span`
-    color: #555555;
-    text-decoration: none;
-    cursor: pointer;
-    &:hover {
-        color: #1E00D3;
-        padding-bottom: 18px;
-        box-shadow: inset 0 -2px 0 #1E00D3;
-    }
-`;
-
-const Hamburger = styled.div`
-    display: none;
     @media (max-width: 600px) {
-    display: block;
-    cursor: pointer;
+        display: flex;
+        justify-content: center;
     }
-`;
+`
 
-interface StyledNavLinksProps {
-    open: boolean;
-}
-const NavLinks = styled.ul<StyledNavLinksProps>`
-    list-style: none;
-    display: flex;
-    margin-left: 25px;
-    
-    @media (max-width: 600px) {
-        flex-direction: column;
-        align-items: center;
-        margin-left: -4vw;
-        width: 100%;
-        height: 0;
-        overflow: hidden;
-        transition: height 0.2s ease;
-        ${props => (props.open ? "height: auto;" : "")}
-        >div{
-            display: none;
-        }
-    }
-    li {
-        padding: 1rem;
-        animation: ${props =>
-        props.open ? "slideDown 0.8s ease forwards" : "none"};
-    }
-    @keyframes slideDown {
-        0% {
-        transform: translateY(-1rem);
-        opacity: 0;
-        }
-        100% {
-        transform: translateY(0);
-        opacity: 1;
-        }
-    }
-`;
+const HomeImg = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center; /* This will keep the right side of the image centered */
+`
 
-const NavLink = styled.li`
-    @media (max-width: 600px) {
-        width: 100%;
-        text-align: center;
-    }
-`;
-
-const Gologin = styled.div`
-    margin-top: 10px;
-    @media (max-width: 600px) {
-        width: 100%;
-        text-align: center;
-    }
-`;
-const _LoginLink = styled.span`
-    color: #555555;
-    text-decoration: none;
-    cursor: pointer;
-    &:hover {
-        color: #1E00D3;
-        padding-bottom: 18px;
-        box-shadow: inset 0 -2px 0 #1E00D3;
-    }
-`;
-
-const _Rightitemwrap = styled.div`
-    display: flex;
-    align-items: center;
+const LogoImg = styled.img`
+    width: 450px;
+    height: 450px;
     position: absolute;
-    margin-left: 83%;
-    margin-top: 0.5%;
+    top: 43%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the image */
 `
 
-const _Bell = styled.img`
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
+const Title = styled.div`
+    color: #ffffff;
+    position: absolute;
+    top: 50;
+    left: 50;
+    margin-top: 30px;
+    font-family: 'Black Han Sans', sans-serif;
+    white-space: pre-line; /* Allow line breaks */
+    font-size: 50px;
+    text-align: center;
 `
 
-const _Profile = styled.img`
-    width: 38px;
-    height: 38px;
-    border-radius: 70%;
-    margin-left: 13px;
-    cursor: pointer;
-`
-// interface Thprops {
-//     font : any
-// }
-// const _Teacher = styled.span<Thprops>`
-//     color: ${props => props.color};
-//     font-weight: bold;
-//     margin-left: 15px;
-//     font-size: ${props => props.font};
-//     :last-child {
-//         margin-top: 3px;
-//         margin-left: 0;
-//     }
-//     :hover {
-//         cursor: pointer;
-//     }
-// `;
-
-//모달창 스타일
-
-const ModalWrapper = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    margin-top: 70px;
-    margin-left: 85%;
-    z-index: 2;
-`;
-
-const ModalContent = styled.div`
-    background-color: white;
-    padding: 1rem;
-    width: 100px;
-    height: 100px;
-    border-radius: 0.5rem;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
-
-`;
-
-
-const Alert = styled.div`
-    font-size: 30px;
+const Buttonwrap = styled.div`
+    position: absolute;
+    top: 65%;
+    left: 50;
+    margin-left: 140px;
+    width: 460px;
     display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+
+    @media (max-width: 600px) {
+        width: 90vw;
+        top: 50;
+        left: 50;
+        margin-left: 0;
+    }
+`
+
+const Button = styled.span`
+    width: 220px;
+    height: 70px;
+    border-radius: 50px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 20px;
+    font-weight: 700;
+    box-sizing: border-box;
+    text-decoration: none;
+    padding: 14px 2rem;
+
+    display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top:45vh;
+
+    :hover {
+        background-color: #f0f0f0;
+    }
+
+    @media (max-width: 600px) {
+        width: 160px;
+        height: 60px;
+        font-size: 16px;
+        top: 50;
+        left: 50;
+        margin-left: 0;
+    }
 `
