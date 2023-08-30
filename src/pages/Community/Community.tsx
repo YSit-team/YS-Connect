@@ -20,7 +20,7 @@ const Community = () => {
   const [activeItem, setActiveItem] = useState(null);
   let j = 0;
   //const [j, setj] = useState(0)
-
+// 왜 안 됨?
   // 다음버튼
   const nextpage = () => {
     setCurrentPageSet((prevSet) => prevSet + 1);
