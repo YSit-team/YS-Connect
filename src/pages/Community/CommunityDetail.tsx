@@ -358,7 +358,7 @@ return (
                     placeholder="답글을 입력하세요"
                     value={replyForm}
                     onChange={handleReplyForm}
-                    onKeyDown={(event) => handleReplyKeyPress(event, comment.id)}
+                    onKeyDown={(event:any) => handleReplyKeyPress(event, comment.id)}
                 />
                 <ReplyUnderline />
                 </_Inputwrapper2>
