@@ -1,0 +1,65 @@
+[{
+    "id" : 1,
+    "name" : "Canon 카메라",
+    "sort" : "camera",
+    "url" : "CanonXf705.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 2,
+    "name" : "Canon 마이크",
+    "sort" : "mic",
+    "url" : "CanonEOSR6.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 3,
+    "name" : "Canon 조명",
+    "sort" : "light",
+    "url" : "CanonXf705.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 4,
+    "name" : "Canon 카메라2",
+    "sort" : "camera",
+    "url" : "CanonEOSR6.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 5,
+    "name" : "Canon 마이크2",
+    "sort" : "mic",
+    "url" : "CanonXf705.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 6,
+    "name" : "Canon 조명2 R6",
+    "sort" : "light",
+    "url" : "CanonEOSR6.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 7,
+    "name" : "Canon XF 카메라3",
+    "sort" : "Camera",
+    "url" : "CanonXf705.png",
+    "amount" : 1,
+    "isChecked" : true
+},
+{
+    "id" : 8,
+    "name" : "핀마이크",
+    "sort" : "mic",
+    "url" : "CanonEOSR6.png",
+    "amount" : 1,
+    "isChecked" : true
+}
+]
