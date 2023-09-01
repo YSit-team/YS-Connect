@@ -55,6 +55,8 @@ const [commentForm, setCommentForm] = useState('');
 const [replyForm, setReplyForm] = useState('');
 const [replyTarget, setReplyTarget] = useState('');
 
+//.
+
 useEffect(() => {
     // 'userId'가 sessionStorage에 존재하는지 확인
     const storedUserID = sessionStorage.getItem('userId');

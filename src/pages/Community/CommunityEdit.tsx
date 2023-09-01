@@ -127,7 +127,7 @@ const CommunityWrite: React.FC = () => {
     );
 };
 
-
+//..
 export default CommunityWrite;
 
 const Wrap = styled.div`
