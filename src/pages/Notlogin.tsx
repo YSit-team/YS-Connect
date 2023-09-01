@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
 import styled from 'styled-components';
 import Menubar from '../components/Menubar';
 
@@ -21,15 +21,25 @@ const Notlogin = () => {
     return (
         <>
             <HomeImgwrap>
-            {isMobile ? <div style={{width: '100vw', height: '100vh', backgroundColor: '#000000'}}></div> : <HomeImg src='HomeImg.png'/>}
+            {isMobile ? <HomeImg src='MobileImg.jpeg'/> : <HomeImg src='HomeImg.png'/>}
                 {/* <HomeImg src={isMobile ? 'MobileHome.png' : 'DesktopHome.png'} alt="홈 배경화면" /> */}
                 {isMobile ? <>
-                    <Title>
-                        당신 근처의{'\n'}
-                        학교 생활 도우미
-                    </Title>
-                    
-                    <LogoImg src="/icon/YSlogo.png" alt="" />
+                        <MobileWrap>
+                            <Title>
+                            당신 근처의{'\n'}
+                            학교 생활 도우미
+                            </Title>
+                            <StartBtn onClick={()=>navigate('/login')}>시작하기</StartBtn>
+                            <Text>계정이 없나요? 여기에서 <Link to='signup-form' style={{color:'#1e00d3'}}>회원가입</Link>하세요!</Text>
+                            <Text style={{marginTop:"20px"}}>앱 다운로드하기</Text>
+
+                            <StoreBtnwrap>
+                                <StoreBtn href="https://play.google.com/store/apps/details?id=com.sejong.jys&hl=ko-KR">GooglePlay</StoreBtn>
+                                <StoreBtn href="https://play.google.com/store/apps/details?id=com.sejong.jys&hl=ko-KR">AppStore</StoreBtn>
+                            </StoreBtnwrap>
+                        </MobileWrap>
+
+                        
                     </> : ''}
                 <Buttonwrap>
                     <Button onClick={()=>navigate('/login')}>로그인</Button>
@@ -51,6 +61,7 @@ const HomeImgwrap = styled.div`
     height: 100vh;
     overflow: hidden;
     position: relative;
+    
 
     @media (max-width: 600px) {
         display: flex;
@@ -75,15 +86,13 @@ const LogoImg = styled.img`
 `
 
 const Title = styled.div`
-    color: #ffffff;
-    position: absolute;
-    top: 50;
-    left: 50;
-    margin-top: 30px;
-    font-family: 'Black Han Sans', sans-serif;
+    color: #000000;
+    
     white-space: pre-line; /* Allow line breaks */
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
+
+    font-family: 'BMJUA';
 `
 
 const Buttonwrap = styled.div`
@@ -98,11 +107,7 @@ const Buttonwrap = styled.div`
     align-items: center;
 
     @media (max-width: 600px) {
-        width: 90vw;
-        top: 50;
-        left: 50;
-        margin-left: 0;
-        justify-content: space-around;
+        display: none;
     }
 `
 
@@ -173,4 +178,75 @@ const Storelink = styled.a`
         left: 50;
         margin-left: 0;
     }
+`
+
+const MobileWrap = styled.div`
+    position: absolute;
+    top: 55%;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+`
+
+const StartBtn = styled.span`
+    width: 9.5rem;
+    height: 50px;
+    border-radius: 50px;
+    background-color: #1E00D3;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 500;
+    box-sizing: border-box;
+    text-decoration: none;
+    margin: 0 auto;
+    margin-top: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'BMJUA';
+
+    :hover {
+        background-color: #1c00bc;
+    }
+`
+
+const StoreBtnwrap = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    width: 70vw;
+`
+
+const StoreBtn = styled.a`
+    width: 7rem;
+    height: 40px;
+    border-radius: 50px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 13px;
+    font-weight: 500;
+    box-sizing: border-box;
+    text-decoration: none;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'BMJUA';
+
+    :hover {
+        background-color: #e1e1e1;
+    }
+`
+
+const Text = styled.p`
+    text-align: center;
+    font-size: 13px;
+    font-weight: 100;
+    font-family: 'BMJUA';
 `

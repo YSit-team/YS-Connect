@@ -1,157 +1,171 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import Menubar from '../../components/Menubar';
-import { Link } from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
-import { Ring } from '@uiball/loaders'
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import Menubartest from "../../components/Menubar";
+import axios from "axios";
+import Menubar from "../../components/Menubar";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getByDisplayValue } from "@testing-library/react";
 
 const Community = () => {
-let navigate = useNavigate();
+    let navigate = useNavigate();
 
-const [postsData, setPostData] = useState([]);
-const [page, setPage] = useState(1);
-const [totalpage, setTotalpage] = useState(0);
-const [displayedPages, setDisplayedPages] = useState([]);
-const [currentPageSet, setCurrentPageSet] = useState(1);
-const pagesPerSet = 5;
-const totalSets = Math.ceil(totalpage / pagesPerSet);
-const [activeItem, setActiveItem] = useState(null);
-let j = 0;
+    const [postsData, setPostData] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalpage, setTotalpage] = useState(0);
+    const [displayedPages, setDisplayedPages] = useState([]);
+    const [currentPageSet, setCurrentPageSet] = useState(1);
+    const pagesPerSet = 5;
+    const totalSets = Math.ceil(totalpage / pagesPerSet);
+    const [activeItem, setActiveItem] = useState(null);
+    let j = 0;
+    //const [j, setj] = useState(0)
 
-const nextpage = () => {
-    setCurrentPageSet((prevSet) => prevSet + 1);
+    // 다음버튼
+    const nextpage = () => {
+        setCurrentPageSet((prevSet) => prevSet + 1);
 
-    const remainder = page % 5;
-    const steps = remainder === 0 ? 1 : 6 - remainder;
-    setPage((prevPage) => prevPage + steps);
-};
+        const remainder = page % 5;
+        const steps = remainder === 0 ? 1 : 6 - remainder;
+        setPage((prevPage) => prevPage + steps);
+    };
 
-//이전버튼
-const prevpage = () => {
-    setCurrentPageSet((prevSet) => prevSet - 1);
+    //이전버튼
+    const prevpage = () => {
+        setCurrentPageSet((prevSet) => prevSet - 1);
 
-    const remainder = page % 5;
-    const steps = remainder === 0 ? 5 : remainder;
-    setPage((prevPage) => prevPage - steps);
-};
+        const remainder = page % 5;
+        const steps = remainder === 0 ? 5 : remainder;
+        setPage((prevPage) => prevPage - steps);
+    };
+    //console.log('currentPageSet',currentPageSet)
 
+    const btnpages: JSX.Element[][] = [[]]; // btnpages 배열을 빈 배열로 초기화
 
-const btnpages: JSX.Element[][] = [[]]; // btnpages 배열을 빈 배열로 초기화
+    // const handleItemClick = () => {
+    //   setActiveItem();
+    //   document.getElementById('next').style.display = 'block';
+    // };  
 
-const renderPaginationButtons = () => {
-    for (let i = 1; i <= totalpage; i++) {
-    if ((i - 1) % 5 === 0) {
-        btnpages[j] = []; // 새로운 배열을 초기화
-    }
-    btnpages[j].push(
-        <a key={i} onClick={() => setPage(i)} className={`num${page === i ? "active" : i}`}>
-        {i}
-        </a>
+    //페이지 렌더링함수
+    const renderPaginationButtons = () => {
+        for (let i = 1; i <= totalpage; i++) {
+            if ((i - 1) % 5 === 0) {
+                btnpages[j] = []; // 새로운 배열을 초기화
+            }
+            btnpages[j].push(
+                <a key={i} onClick={() => setPage(i)} className={`num${page === i ? "active" : i}`}>
+                    {i}
+                </a>
+            );
+
+            if (i % 5 === 0 || i === totalpage) {
+                // 페이지 번호가 5의 배수이거나 마지막 페이지일 때 j 값을 증가시킴
+                //setj(j+1)
+                j++;
+            }
+        }
+        //console.log(btnpages)
+
+        //console.log('영준',)
+        //setj(0)
+        //console.log(j)
+        return btnpages[j];
+    };
+
+    useEffect(() => {
+        const handle = async () => {
+            const params = {
+                page: page,
+                limit: 10,
+            };
+
+            //console.log(page);
+
+            try {
+                const response = await axios.get("https://www.zena.co.kr/api/Community/postInquiry", { params });
+                setTotalpage(response.data.totalPages);
+                setPostData(response.data.data);
+                console.log("api호출 완료");
+                console.log(response.data);
+            } catch (error) {
+                console.log("api호출 안됨...");
+                console.log(error);
+            }
+        };
+
+        setPostData([]);
+        handle();
+    }, [page]);
+
+    return (
+        <>
+            {postsData.length == 0 ? (
+                <div>로딩중</div>
+            ) : (
+                <>
+                    <_GlobalWrap>
+                        <Menubar />
+                        <_BoardListWrap>
+                            <_BoardTitle>커뮤니티</_BoardTitle>
+                            {/* <div>
+                                page:{page} , currentPageSet:{currentPageSet} , totalSets:{totalSets} , totalpage:{totalpage}
+                            </div> */}
+                            <_BoardList>
+                                <_ListHead>
+                                    <_Title>제목</_Title>
+                                    <_Name>작성자</_Name>
+                                    <_Time>작성일</_Time>
+                                    <_Views>조회</_Views>
+                                    <_Likes>댓글</_Likes>
+                                </_ListHead>
+                                <_ListBody>
+                                    {postsData.map((data: any) => {
+                                        //console.log(data)
+                                        return (
+                                            <_Item className="list-item" key={data.id}>
+                                                <_Title className="item-title">
+                                                    <Link to={`/communitydetail/${data.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                                        <div>{data.title}</div>
+                                                    </Link>
+                                                </_Title>
+                                                <_Name>{data.author}</_Name>
+                                                <_Time>{`${data.date.slice(0, 10).replace(/-/g, ".")}`}</_Time>
+                                                <_Views>{data.views}</_Views>
+                                                <_Likes>{data.commentsCount}</_Likes>
+                                            </_Item>
+                                        );
+                                    })}
+                                </_ListBody>
+                                <_PostBtn>
+                                    <_WriteBtn onClick={() => navigate("/communitywrite")}>글쓰기</_WriteBtn>
+                                </_PostBtn>
+                            </_BoardList>
+                            <_Paging>
+                                {/* <button className='first' >처음 페이지</button> */}
+                                {currentPageSet == 1 ? null : (
+                                    <PrevBtn className="prev" onClick={prevpage}>
+                                        &lt;&lt;
+                                    </PrevBtn>
+                                )}
+                                {/* <button className='num'>{page}</button> */}
+                                {renderPaginationButtons()}
+                                <Pagination>
+                                    <a className="midnum">{btnpages[currentPageSet - 1]}</a>
+                                </Pagination>
+                                {btnpages[currentPageSet - 1][btnpages[currentPageSet - 1].length - 1].key == totalpage ? null : (
+                                    <NextBtn className="next" onClick={nextpage}>
+                                        &gt;&gt;
+                                    </NextBtn>
+                                )}
+                            </_Paging>
+                        </_BoardListWrap>
+                    </_GlobalWrap>
+                </>
+            )}
+        </>
     );
-
-    if (i % 5 === 0 || i === totalpage) {
-        // 페이지 번호가 5의 배수이거나 마지막 페이지일 때 j 값을 증가시킴
-        //setj(j+1)
-        j++;
-    }
-    }
-    //console.log(btnpages)
-
-    return btnpages[j];
 };
-
-useEffect(() => {
-    const handle = async () => {
-    const params = {
-        page: page,
-        limit: 10,
-    };
-
-    //console.log(page);
-
-    try {
-        const response = await axios.get("https://www.zena.co.kr/api/Community/postInquiry", { params });
-        setTotalpage(response.data.totalPages);
-        setPostData(response.data.data);
-        console.log("api호출 완료");
-        console.log(response.data);
-    } catch (error) {
-        console.log("api호출 안됨...");
-        console.log(error);
-    }
-    };
-
-    setPostData([]);
-    handle();
-}, [page]);
-
-return (
-    <>
-        {postsData.length === 0 ? (
-            <Rodingwrap>
-                <Ring 
-                    size={40}
-                    lineWeight={5}
-                    speed={2} 
-                    color="black" 
-                />
-            </Rodingwrap>
-        ) : (
-            <_GlobalWrap>
-                <Menubar />
-                <_BoardListWrap>
-                    <_BoardTitle>커뮤니티</_BoardTitle>
-                    <_BoardList>
-                        <_ListHead>
-                            <_Title>제목</_Title>
-                            <_Name>작성자</_Name>
-                            <_Time>작성일</_Time>
-                            <_Views>조회</_Views>
-                            <_Likes>댓글</_Likes>
-                        </_ListHead>
-                        <_ListBody>
-                            {postsData.map((data: any) => (
-                                <_Item className="list-item" key={data.id}>
-                                    <_Title className="item-title">
-                                        <Link to={`/communitydetail/${data.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                                            <div>{data.title}</div>
-                                        </Link>
-                                    </_Title>
-                                    <_Name>{data.author}</_Name>
-                                    <_Time>{`${data.date.slice(0, 10).replace(/-/g, ".")}`}</_Time>
-                                    <_Views>{data.views}</_Views>
-                                    <_Likes>{data.commentsCount}</_Likes>
-                                </_Item>
-                            ))}
-                        </_ListBody>
-                        <_PostBtn>
-                            <_WriteBtn onClick={() => navigate("/communitywrite")}>글쓰기</_WriteBtn>
-                        </_PostBtn>
-                    </_BoardList>
-                    <_Paging>
-                        {currentPageSet === 1 ? null : (
-                            <PrevBtn className="prev" onClick={prevpage}>
-                                &lt;&lt;
-                            </PrevBtn>
-                        )}
-                        {renderPaginationButtons()}
-                        <Pagination>
-                            <a className="midnum">{btnpages[currentPageSet - 1]}</a>
-                        </Pagination>
-                        {btnpages[currentPageSet - 1][btnpages[currentPageSet - 1].length - 1].key === totalpage ? null : (
-                            <NextBtn className="next" onClick={nextpage}>
-                                &gt;&gt;
-                            </NextBtn>
-                        )}
-                    </_Paging>
-                </_BoardListWrap>
-            </_GlobalWrap>
-        )}
-    </>
-);
-}
-
 
 export default Community;
 const _GlobalWrap = styled.div`
@@ -333,10 +347,4 @@ cursor: pointer;
 :hover {
     text-decoration: underline;
 }
-`;
-
-const Rodingwrap = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
 `;
