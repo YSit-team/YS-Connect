@@ -21,7 +21,7 @@ const Notlogin = () => {
     return (
         <>
             <HomeImgwrap>
-            {isMobile ? <div style={{width: '100vw', height: '100vh', backgroundColor: '#000000'}}></div> : <HomeImg src='DesktopHome.png'/>}
+            {isMobile ? <div style={{width: '100vw', height: '100vh', backgroundColor: '#000000'}}></div> : <HomeImg src='HomeImg.png'/>}
                 {/* <HomeImg src={isMobile ? 'MobileHome.png' : 'DesktopHome.png'} alt="홈 배경화면" /> */}
                 {isMobile ? <>
                     <Title>
@@ -32,12 +32,12 @@ const Notlogin = () => {
                     <LogoImg src="/icon/YSlogo.png" alt="" />
                     </> : ''}
                 <Buttonwrap>
-                    <Button>로그인</Button>
-                    <Button>회원가입</Button>
+                    <Button onClick={()=>navigate('/login')}>로그인</Button>
+                    <Button onClick={()=>navigate('/signup-form')}>회원가입</Button>
                 </Buttonwrap>
                 <Buttonwrap style={{top : "75%"}}>
-                    <Button>Google Play</Button>
-                    <Button>App Store</Button>
+                    <Storelink href="https://play.google.com/store/apps/details?id=com.sejong.jys&hl=ko-KR">Google Play</Storelink>
+                    <Storelink href="https://play.google.com/store/apps/details?id=com.sejong.jys&hl=ko-KR">App Store</Storelink>
                 </Buttonwrap>
             </HomeImgwrap>
         </>
@@ -91,7 +91,7 @@ const Buttonwrap = styled.div`
     top: 65%;
     left: 50;
     margin-left: 140px;
-    width: 460px;
+    width: 30vw;
     display: flex;
     justify-content: space-around;
     flex-direction: row;
@@ -102,11 +102,12 @@ const Buttonwrap = styled.div`
         top: 50;
         left: 50;
         margin-left: 0;
+        justify-content: space-around;
     }
 `
 
 const Button = styled.span`
-    width: 220px;
+    width: 10rem;
     height: 70px;
     border-radius: 50px;
     background-color: #ffffff;
@@ -115,7 +116,6 @@ const Button = styled.span`
     font-weight: 700;
     box-sizing: border-box;
     text-decoration: none;
-    padding: 14px 2rem;
 
     display: flex;
     align-items: center;
@@ -123,6 +123,46 @@ const Button = styled.span`
 
     :hover {
         background-color: #f0f0f0;
+    }
+
+    @media (max-width: 780px) {
+        font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+        width: 160px;
+        height: 60px;
+        font-size: 16px;
+        top: 50;
+        left: 50;
+        margin-left: 0;
+    }
+`
+
+const Storelink = styled.a`
+    text-decoration: none;
+
+    width: 10rem;
+    height: 70px;
+    margin-top: 10px;
+    border-radius: 50px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 20px;
+    font-weight: 700;
+    box-sizing: border-box;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :hover {
+        background-color: #f0f0f0;
+    }
+
+    @media (max-width: 780px) {
+        font-size: 14px;
     }
 
     @media (max-width: 600px) {
